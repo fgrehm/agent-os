@@ -1,5 +1,12 @@
 <img width="1280" height="640" alt="agent-os-og" src="https://github.com/user-attachments/assets/f70671a2-66e8-4c80-8998-d4318af55d10" />
 
+> **Note**: This is [@fgrehm](https://github.com/fgrehm)'s fork of [buildermethods/agent-os](https://github.com/buildermethods/agent-os) with additional features:
+> - **Claude Code integration** - `.claude/settings.json` and project configuration
+> - **Navigator profile** - Pause-for-review workflow with checkpoints after each phase
+> - **Chezmoi profile** - Specialized roles and standards for dotfiles management
+>
+> See [CLAUDE.md](CLAUDE.md) for details on fork-specific features and upstream contribution workflow.
+
 ## Your system for spec-driven agentic development.
 
 [Agent OS](https://buildermethods.com/agent-os) transforms AI coding agents from confused interns into productive developers. With structured workflows that capture your standards, your stack, and the unique details of your codebase, Agent OS gives your agents the specs they need to ship quality code on the first try—not the fifth.
