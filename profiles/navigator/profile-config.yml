@@ -1,0 +1,19 @@
+# Navigator Profile
+#
+# This profile inherits from the default profile and adds pause-for-review
+# workflow enhancements to all commands.
+#
+# Like a navigator guiding a pilot, this profile provides checkpoints throughout
+# the spec-driven development workflow where the AI pauses for your review and
+# approval before proceeding.
+#
+# Features:
+# - Orchestrator pauses after each task group for review/commit
+# - Agents pause after each workflow phase (plan-product, new-spec, create-spec)
+# - Clear commit strategy guidance at each checkpoint
+# - Prevents massive uncommittable changesets
+
+inherits_from: default
+
+# All files in this profile override the default profile
+# Everything else (agents, roles, workflows, etc.) is inherited from default
