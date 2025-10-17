@@ -26,6 +26,35 @@ This repository is a fork of `buildermethods/agent-os`. The upstream project doe
 
 This way you can work with all fork features during development, then create a clean upstream-compatible branch when contributing back.
 
+**Creating cherry-pickable commits**:
+
+To make upstream contributions easier, structure commits so upstream-compatible changes are separate from fork-specific changes:
+
+- **Upstream-ready commits**: Core improvements, bug fixes, new features that work with base Agent OS
+  - Example: `feat(scripts): add --base-dir flag to installation scripts`
+  - Can be cherry-picked directly to upstream branch
+
+- **Fork-specific commits**: Changes to `.claude/`, navigator/chezmoi profiles, TODO.md ideas
+  - Example: `docs(TODO): add future improvement ideas`
+  - Kept in fork, not included in upstream PR
+
+**Example workflow**:
+```bash
+# Make core improvement
+git add scripts/*.sh
+git commit -m "feat(scripts): add --base-dir flag to installation scripts"
+
+# Separately commit fork-specific changes
+git add TODO.md
+git commit -m "docs(TODO): add ideas for future improvements"
+
+# Later, cherry-pick only upstream-ready commits
+git checkout -b upstream-contribution upstream/main
+git cherry-pick <upstream-ready-commit-hash>
+```
+
+This approach keeps git history clean and makes it trivial to extract upstream contributions without manual file editing.
+
 The fork-specific additions are maintained in this repository to enhance Agent OS with Claude Code support and specialized profiles for different use cases.
 
 ## Documentation Resources
