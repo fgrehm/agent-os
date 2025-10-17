@@ -30,6 +30,8 @@ The fork-specific additions are maintained in this repository to enhance Agent O
 
 ## Documentation Resources
 
+### Official Docs
+
 For detailed explanations of Agent OS concepts and workflows, reference these docs:
 
 - **[Overview](https://buildermethods.com/agent-os)** - Core philosophy and spec-driven development approach
@@ -51,6 +53,24 @@ For detailed explanations of Agent OS concepts and workflows, reference these do
 - **[/new-spec](https://buildermethods.com/agent-os/new-spec)** - Research and gather feature requirements
 - **[/create-spec](https://buildermethods.com/agent-os/create-spec)** - Write detailed spec and task breakdown
 - **[/implement-spec](https://buildermethods.com/agent-os/implement-spec)** - Execute implementation with agents
+
+### Searching Upstream Community
+
+To research community patterns, profile examples, and customization approaches:
+
+**GitHub Search Patterns:**
+- Issues: `https://github.com/search?type=issues&q=repo:buildermethods/agent-os+KEYWORD`
+- PRs: `https://github.com/search?type=pullrequests&q=repo:buildermethods/agent-os+KEYWORD`
+- Discussions: `https://github.com/search?type=discussions&q=repo:buildermethods/agent-os+KEYWORD`
+
+**Useful Keywords:**
+- `profile`, `role`, `standards`, `custom`, `bootstrap`, `example`, `mixin`
+- Tech-specific: `rails`, `python`, `nextjs`, `wordpress`, etc.
+
+**Direct Links:**
+- [All Discussions](https://github.com/buildermethods/agent-os/discussions)
+- [Merged PRs](https://github.com/buildermethods/agent-os/pulls?q=is%3Apr+is%3Amerged)
+- [Open Issues](https://github.com/buildermethods/agent-os/issues)
 
 ## Quick Reference
 
@@ -127,6 +147,32 @@ When `project-install.sh` runs:
 3. Creates `agent-os/` folder in project and `.claude/agents/` in multi-agent mode
 
 See [Profiles](https://buildermethods.com/agent-os/profiles), [Workflows](https://buildermethods.com/agent-os/workflows), and [Roles](https://buildermethods.com/agent-os/roles) docs for details.
+
+## Bootstrap Commands
+
+This fork includes Claude Code commands to help create new profiles and roles intelligently:
+
+### `/bootstrap-profile`
+
+Creates a new Agent OS profile tailored to a specific project type or tech stack. This command:
+- Analyzes project characteristics and tech stack (if provided)
+- Suggests appropriate standards, roles, and workflows
+- Guides through inheritance and customization decisions
+- Generates complete profile structure
+
+**When to use:** Creating profiles for Rails APIs, Python data science, mobile apps, or any specialized project type.
+
+### `/bootstrap-role`
+
+Creates a new role (implementer or verifier) based on project needs. This command:
+- Identifies gaps in current role coverage
+- Defines clear responsibilities and boundaries
+- Configures tools, standards, and verification
+- Generates YAML role definition
+
+**When to use:** Adding specialized roles like "GraphQL engineer", "ML pipeline engineer", "accessibility expert", or "security verifier".
+
+These commands wrap the bash scripts (`create-profile.sh`, `create-role.sh`) with intelligent analysis and suggestions.
 
 ## Common Development Tasks
 
