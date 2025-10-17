@@ -93,6 +93,60 @@ This file tracks improvements to contribute back to `buildermethods/agent-os`.
 
 ---
 
+### Preserve Project Data During Re-install
+
+**Problem:** `--re-install` flag completely deletes `agent-os/` folder, including `product/` and `specs/` directories that contain valuable project data and specifications.
+
+**Proposed solution:** Add option to preserve project data during re-installation:
+
+```bash
+~/agent-os/scripts/project-install.sh \
+  --profile rails-fullstack \
+  --re-install \
+  --preserve-data  # or --preserve product,specs
+```
+
+**What should be preserved:**
+- `agent-os/product/` - Product vision, roadmap, tech-stack
+- `agent-os/specs/` - All feature specifications and implementation history
+- Potentially `agent-os/config.yml` settings (profile, modes, tools)
+
+**What should be reinstalled:**
+- `agent-os/standards/` - Refreshed from profile
+- `agent-os/roles/` - Refreshed from profile
+- `agent-os/commands/` (if in both modes) - Refreshed from profile
+- `.claude/agents/agent-os/` - Regenerated from templates
+- `.claude/commands/agent-os/` - Refreshed from profile
+
+**Implementation approach:**
+1. Add `--preserve-data` flag (or `--preserve <comma-separated-dirs>`)
+2. Before deletion, move preserved directories to temp location
+3. Reinstall from profile
+4. Restore preserved directories
+5. Update config.yml with new profile/settings
+
+**Alternative approach:** Backup suggestion instead of hard preserve:
+```
+⚠️  Re-install will delete agent-os/ including product/ and specs/
+
+   Would you like to:
+   1. Continue and delete everything
+   2. Backup to agent-os.backup/ and continue
+   3. Cancel
+```
+
+**Benefits:**
+- Safer profile switching (keeps project context)
+- Allows refreshing standards/roles without losing specs
+- More user-friendly for experimentation
+
+**Considerations:**
+- Should `config.yml` be preserved or regenerated?
+- How to handle profile-specific files in preserved directories?
+- Document the preserved vs refreshed behavior clearly
+
+---
+
 ### Other Ideas
 
 - Profile templates/examples repository

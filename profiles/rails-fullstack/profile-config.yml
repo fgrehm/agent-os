@@ -1,0 +1,13 @@
+inherits_from: navigator
+
+# Rails Fullstack Profile
+#
+# Tailored for Ruby on Rails applications with TypeScript/Stimulus frontend,
+# PostgreSQL database, service-oriented architecture, and comprehensive testing.
+#
+# Key characteristics:
+# - Rails 8.0+ with service_base monadic patterns
+# - TypeScript + Stimulus + Turbo frontend
+# - PostgreSQL with UUIDs and encrypted PII
+# - RSpec + Vitest testing
+# - Multi-agent workflow with specialized implementers and verifiers
