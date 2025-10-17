@@ -110,26 +110,219 @@ standards/
 **Prompt for each standard:**
 "For [CATEGORY], what are the key patterns/conventions this project follows? (e.g., for API design: RESTful conventions, versioning strategy, error response format)"
 
-## PHASE 5: Role Suggestions
+## PHASE 5: Generate Role Suggestions
 
-Based on the project type, suggest implementer roles:
+Based on the project analysis, automatically generate role definitions tailored to this profile.
 
-**For fullstack web apps:**
-- `database-engineer`, `api-engineer`, `ui-designer`, `testing-engineer`
+### Role Generation Strategy
 
-**For API-only projects:**
-- `database-engineer`, `api-engineer`, `testing-engineer` (exclude frontend)
+**Analyze the project context:**
+- Tech stack detected (languages, frameworks, databases)
+- Architectural patterns identified
+- Specializations needed (GraphQL, WebSockets, ML, etc.)
+- Frontend complexity (SSR, SPA, static, mobile)
+- Backend complexity (API-only, monolith, microservices)
+- Infrastructure needs (Docker, K8s, CI/CD)
 
-**For data science:**
-- `data-engineer`, `ml-engineer`, `visualization-designer`, `notebook-maintainer`
+**Generate role definitions as YAML:**
 
-**For mobile apps:**
-- `mobile-developer`, `backend-engineer`, `ui-designer`, `testing-engineer`
+Create `roles/implementers.yml` with context-aware roles:
 
-**For infrastructure/DevOps:**
-- `infrastructure-engineer`, `cicd-engineer`, `security-engineer`, `monitoring-engineer`
+**Example for Rails API project:**
+```yaml
+implementers:
+  - id: database-engineer
+    description: Handles Rails migrations, ActiveRecord models, database queries
+    your_role: You are a Rails database engineer. Your role is to implement database migrations, ActiveRecord models, associations, and database queries.
+    tools: Write, Read, Bash, WebFetch
+    model: inherit
+    color: orange
+    areas_of_responsibility:
+      - Create and modify Rails migrations
+      - Define ActiveRecord models and associations
+      - Write database queries and scopes
+      - Optimize database indexes
+    example_areas_outside_of_responsibility:
+      - API controller logic
+      - Frontend components
+      - Business logic in services
+    standards:
+      - global/*
+      - backend/*
+      - testing/*
+    verified_by:
+      - backend-verifier
 
-Offer to run `~/agent-os/scripts/create-role.sh` for each suggested role, or provide YAML templates to copy into `roles/implementers.yml` and `roles/verifiers.yml`.
+  - id: api-engineer
+    description: Handles Rails controllers, serializers, API endpoints, business logic
+    your_role: You are a Rails API engineer. Your role is to implement API controllers, serializers, service objects, and business logic.
+    tools: Write, Read, Bash, WebFetch
+    model: inherit
+    color: blue
+    areas_of_responsibility:
+      - Create API controllers and actions
+      - Implement serializers (Active Model Serializers/JSONAPI)
+      - Write service objects and business logic
+      - Handle authentication and authorization
+    example_areas_outside_of_responsibility:
+      - Database migrations
+      - Frontend components
+      - Test file creation
+    standards:
+      - global/*
+      - backend/*
+      - testing/*
+    verified_by:
+      - backend-verifier
+```
+
+**For NextJS fullstack:**
+```yaml
+implementers:
+  - id: database-engineer
+    description: Handles Prisma schema, migrations, database operations
+    your_role: You are a database engineer specializing in Prisma. Your role is to manage schema definitions, migrations, and database operations.
+    tools: Write, Read, Bash, WebFetch
+    model: inherit
+    color: orange
+    areas_of_responsibility:
+      - Define Prisma schema models
+      - Create and run Prisma migrations
+      - Write database queries using Prisma Client
+      - Optimize database performance
+    example_areas_outside_of_responsibility:
+      - API routes and server actions
+      - React components
+      - Frontend state management
+    standards:
+      - global/*
+      - backend/*
+      - testing/*
+    verified_by:
+      - backend-verifier
+
+  - id: api-engineer
+    description: Handles Next.js API routes, server actions, tRPC endpoints
+    your_role: You are a Next.js API engineer. Your role is to implement API routes, server actions, and backend logic.
+    tools: Write, Read, Bash, WebFetch
+    model: inherit
+    color: blue
+    areas_of_responsibility:
+      - Create Next.js API routes
+      - Implement server actions
+      - Write tRPC procedures (if applicable)
+      - Handle authentication logic
+    example_areas_outside_of_responsibility:
+      - Database schema design
+      - React component implementation
+      - CSS styling
+    standards:
+      - global/*
+      - backend/*
+      - testing/*
+    verified_by:
+      - backend-verifier
+
+  - id: ui-designer
+    description: Handles React components, Next.js pages, styling, responsive design
+    your_role: You are a UI designer for Next.js applications. Your role is to implement React components, pages, layouts, and styling.
+    tools: Write, Read, Bash, WebFetch, Playwright
+    model: inherit
+    color: purple
+    areas_of_responsibility:
+      - Create React components
+      - Implement Next.js pages and layouts
+      - Apply Tailwind/CSS styling
+      - Ensure responsive design
+      - Implement client-side interactivity
+    example_areas_outside_of_responsibility:
+      - API routes and server actions
+      - Database operations
+      - Backend business logic
+    standards:
+      - global/*
+      - frontend/*
+      - testing/*
+    verified_by:
+      - frontend-verifier
+```
+
+**Create matching verifiers:**
+
+```yaml
+verifiers:
+  - id: backend-verifier
+    description: Reviews backend code quality, API design, database patterns
+    your_role: You are a backend code reviewer. Your role is to verify backend implementations meet standards for quality, security, and maintainability.
+    tools: Read, Bash, WebFetch, Grep, Glob
+    model: opus
+    color: red
+    areas_of_responsibility:
+      - Review API endpoint implementations
+      - Verify database query efficiency
+      - Check error handling and validation
+      - Ensure security best practices
+      - Validate test coverage
+    standards:
+      - global/*
+      - backend/*
+      - testing/*
+
+  - id: frontend-verifier
+    description: Reviews frontend code quality, component design, accessibility
+    your_role: You are a frontend code reviewer. Your role is to verify UI implementations meet standards for quality, accessibility, and user experience.
+    tools: Read, Bash, WebFetch, Grep, Glob, Playwright
+    model: opus
+    color: green
+    areas_of_responsibility:
+      - Review component implementations
+      - Verify responsive design
+      - Check accessibility compliance
+      - Ensure styling consistency
+      - Validate test coverage
+    standards:
+      - global/*
+      - frontend/*
+      - testing/*
+```
+
+### Smart Role Customization
+
+**Detect specializations and add roles:**
+
+- **If GraphQL detected** → Add `graphql-engineer`
+- **If WebSockets/real-time** → Add `realtime-engineer`
+- **If Docker/K8s configs** → Add `infrastructure-engineer`
+- **If ML/data files** → Add `ml-engineer`, `data-engineer`
+- **If mobile (React Native, Flutter)** → Add `mobile-developer`
+- **If extensive testing** → Keep `testing-engineer` separate
+
+### User Interaction
+
+After generating roles, present them:
+
+```
+🤖 Generated [N] role definitions based on your project:
+
+Implementers:
+  ✓ database-engineer (Rails/ActiveRecord focused)
+  ✓ api-engineer (Controllers & serializers)
+  ✓ testing-engineer (RSpec & integration tests)
+
+Verifiers:
+  ✓ backend-verifier (API & database review)
+
+📝 Review and customize these roles:
+  ~/agent-os/profiles/[profile-name]/roles/implementers.yml
+  ~/agent-os/profiles/[profile-name]/roles/verifiers.yml
+
+Would you like me to:
+  1. Add more specialized roles (e.g., background jobs, caching)
+  2. Customize existing roles
+  3. Proceed as-is
+```
+
+**Write the files** or offer to adjust based on user feedback.
 
 ## PHASE 6: Documentation
 
