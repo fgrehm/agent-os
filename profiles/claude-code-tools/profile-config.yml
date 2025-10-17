@@ -1,0 +1,18 @@
+inherits_from: false
+
+# Claude Code Tools Profile
+#
+# A standalone profile for projects focused on developing Claude Code extensions:
+# - Slash commands (.claude/commands/)
+# - Subagents for specialized tasks
+# - Prompt engineering and workflow design
+#
+# This profile is tailored for projects that build and refine AI-assisted development
+# tools, not application features. It emphasizes documentation, prompt quality, and
+# integration testing.
+#
+# Key characteristics:
+# - Minimal, focused standards (no web app bloat)
+# - Roles specialized in AI tool development (command/subagent developers)
+# - Verification focused on integration and documentation quality
+# - Multi-agent workflow support
