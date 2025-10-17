@@ -9,7 +9,7 @@ set -e
 REPO_URL="https://github.com/buildermethods/agent-os"
 
 # Installation paths
-BASE_DIR="$HOME/agent-os"
+BASE_DIR="${BASE_DIR:-$HOME/agent-os}"
 TEMP_DIR=$(mktemp -d)
 COMMON_FUNCTIONS_TEMP="$TEMP_DIR/common-functions.sh"
 
@@ -667,6 +667,10 @@ main() {
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do
         case $1 in
+            --base-dir)
+                BASE_DIR="$2"
+                shift 2
+                ;;
             -v|--verbose)
                 VERBOSE=true
                 shift
@@ -675,6 +679,7 @@ main() {
                 echo "Usage: $0 [OPTIONS]"
                 echo ""
                 echo "Options:"
+                echo "  --base-dir PATH  Base directory for Agent OS (default: \$HOME/agent-os)"
                 echo "  -v, --verbose    Show verbose output"
                 echo "  -h, --help       Show this help message"
                 exit 0

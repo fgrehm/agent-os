@@ -9,7 +9,7 @@ set -e  # Exit on error
 
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-BASE_DIR="$HOME/agent-os"
+BASE_DIR="${BASE_DIR:-$HOME/agent-os}"
 PROJECT_DIR="$(pwd)"
 
 # Source common functions
@@ -51,6 +51,7 @@ Options:
     --multi-agent-tool TOOL     Specify multi-agent tool
     --single-agent-mode [BOOL]  Enable/disable single-agent mode
     --single-agent-tool TOOL    Specify single-agent tool
+    --base-dir PATH             Base directory for Agent OS (default: \$HOME/agent-os)
     --re-install                Delete and reinstall Agent OS
     --overwrite-all             Overwrite all existing files
     --overwrite-agents          Overwrite existing agent files
@@ -95,6 +96,10 @@ parse_arguments() {
                 ;;
             --single-agent-tool)
                 SINGLE_AGENT_TOOL="$2"
+                shift 2
+                ;;
+            --base-dir)
+                BASE_DIR="$2"
                 shift 2
                 ;;
             --re-install)
