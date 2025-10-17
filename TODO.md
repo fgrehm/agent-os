@@ -93,6 +93,36 @@ This file tracks improvements to contribute back to `buildermethods/agent-os`.
 
 ---
 
+### Infer Base Directory from Script Location
+
+**Current behavior:** All scripts hardcode `BASE_DIR="$HOME/agent-os"` (now with `${BASE_DIR:-$HOME/agent-os}` for environment override).
+
+**Proposed improvement:** Infer base directory from script location instead:
+
+```bash
+# Instead of hardcoding:
+BASE_DIR="${BASE_DIR:-$HOME/agent-os}"
+
+# Infer from script location:
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+BASE_DIR="${BASE_DIR:-$(dirname "$SCRIPT_DIR")}"
+# If script is in ~/agent-os/scripts/foo.sh, BASE_DIR becomes ~/agent-os
+```
+
+**Benefits:**
+- Works with custom installation paths without flags
+- More flexible for development/testing (can clone repo anywhere)
+- Eliminates hardcoded home directory assumption
+- Still supports `BASE_DIR` environment override
+- `--base-dir` flag can override for cross-directory operations
+
+**Implementation:**
+- Update all scripts: `base-install.sh`, `project-install.sh`, `project-update.sh`, `create-profile.sh`, `create-role.sh`
+- Test with different installation locations
+- Document behavior in script help text
+
+---
+
 ### Preserve Project Data During Re-install
 
 **Problem:** `--re-install` flag completely deletes `agent-os/` folder, including `product/` and `specs/` directories that contain valuable project data and specifications.
