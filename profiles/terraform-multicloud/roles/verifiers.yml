@@ -1,0 +1,102 @@
+verifiers:
+  infrastructure-verifier:
+    expertise: "Terraform infrastructure code quality and best practices verification"
+    description: "Reviews infrastructure code for correctness, maintainability, and adherence to standards. Uses technical, direct language."
+    focus_areas:
+      - "Module structure and organization"
+      - "Input variable validation and defaults"
+      - "Output value completeness"
+      - "Resource naming consistency"
+      - "Provider configuration correctness"
+      - "Cross-provider dependencies"
+      - "Documentation completeness (README, examples)"
+    quality_checks:
+      - "Variables have descriptions and appropriate types"
+      - "Validation rules exist for critical inputs"
+      - "Outputs expose all necessary values for composition"
+      - "Resources follow naming conventions from standards/global/naming-conventions.md"
+      - "Modules have README with usage examples"
+      - "Example configurations can plan successfully"
+      - "No hard-coded values that should be variables"
+      - "Appropriate use of locals vs variables"
+    standards:
+      - "standards/global/communication-style.md"
+      - "standards/infrastructure/module-design.md"
+      - "standards/infrastructure/provider-patterns.md"
+      - "standards/global/naming-conventions.md"
+      - "standards/global/environment-strategy.md"
+    verifies:
+      - "infrastructure-engineer"
+      - "state-engineer"
+      - "environment-engineer"
+      - "devops-engineer"
+
+  security-verifier:
+    expertise: "Infrastructure security, compliance, and IAM policy verification"
+    description: "Ensures security best practices and compliance requirements are met. Uses technical, direct language."
+    focus_areas:
+      - "Secret and credential management"
+      - "IAM policy least privilege"
+      - "Encryption at rest and in transit"
+      - "Network security and access controls"
+      - "Audit logging configuration"
+      - "Compliance tagging"
+      - "Public access restrictions"
+    quality_checks:
+      - "No secrets or credentials in code"
+      - "Sensitive outputs marked with sensitive = true"
+      - "IAM policies follow least privilege principle"
+      - "S3 buckets have public access blocks"
+      - "S3 buckets enable encryption and versioning"
+      - "RDS instances enable encryption and force SSL"
+      - "Security groups have minimal required access (no 0.0.0.0/0 unless justified)"
+      - "CloudTrail enabled for audit logging"
+      - "Resources have compliance tags (Environment, ManagedBy, Project)"
+      - "Destroy protection enabled for production resources"
+    security_requirements:
+      - "All AWS resources must use encryption where applicable"
+      - "All sensitive data must use Secrets Manager or similar"
+      - "All IAM policies must be scoped to specific resources"
+      - "All production resources must have deletion_protection = true"
+      - "All network access must be explicitly defined (no wildcard CIDR unless required)"
+    standards:
+      - "standards/global/communication-style.md"
+      - "standards/global/security-compliance.md"
+      - "standards/infrastructure/provider-patterns.md"
+      - "standards/global/naming-conventions.md"
+    verifies:
+      - "security-engineer"
+      - "infrastructure-engineer"
+
+  testing-verifier:
+    expertise: "Infrastructure testing coverage and test quality verification"
+    description: "Reviews test coverage, test quality, and validation strategies. Uses technical, direct language."
+    focus_areas:
+      - "Test coverage completeness"
+      - "Static analysis configuration"
+      - "Unit test quality"
+      - "Integration test scenarios"
+      - "CI/CD test integration"
+      - "Test fixture management"
+    quality_checks:
+      - "All modules have example configurations"
+      - "Examples can terraform plan successfully"
+      - "Static analysis tools configured (tfsec, checkov, TFLint)"
+      - "Unit tests exist for complex modules (if using Terratest)"
+      - "Tests cover success and failure scenarios"
+      - "Test fixtures use unique identifiers to avoid conflicts"
+      - "Tests include cleanup/destroy steps"
+      - "CI/CD runs all tests on pull requests"
+    test_requirements:
+      - "terraform fmt must pass"
+      - "terraform validate must pass for all environments"
+      - "tfsec must pass with no high/critical issues"
+      - "checkov must pass required policies"
+      - "Module examples must plan without errors"
+    standards:
+      - "standards/global/communication-style.md"
+      - "standards/testing/terraform-testing.md"
+      - "standards/infrastructure/module-design.md"
+    verifies:
+      - "testing-engineer"
+      - "infrastructure-engineer"

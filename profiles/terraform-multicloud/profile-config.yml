@@ -1,0 +1,12 @@
+inherits_from: false
+
+# Terraform Multi-Cloud Profile
+# Purpose: Infrastructure-as-Code for AWS, Cloudflare, and Heroku
+#
+# This profile provides standards, roles, and workflows for managing
+# multi-cloud infrastructure with Terraform, focusing on:
+# - State management and workspace strategies
+# - Reusable module design and composition
+# - Security, compliance, and secret handling
+# - CI/CD integration with automated plan/apply
+# - Environment separation (dev/staging/prod)
