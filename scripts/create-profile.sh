@@ -9,7 +9,7 @@ set -e  # Exit on error
 
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-BASE_DIR="$HOME/agent-os"
+BASE_DIR="${BASE_DIR:-$HOME/agent-os}"
 PROFILES_DIR="$BASE_DIR/profiles"
 
 # Source common functions
@@ -285,6 +285,7 @@ OPTIONS:
     --name NAME              Profile name (required in non-interactive mode)
     --inherit-from PROFILE   Inherit from existing profile (e.g., 'default')
     --copy-from PROFILE      Copy structure from existing profile
+    --base-dir PATH          Base directory for Agent OS (default: $HOME/agent-os)
     --non-interactive        Run without prompts (requires --name)
     -h, --help              Show this help message
 
@@ -326,6 +327,11 @@ parse_arguments() {
                 ;;
             --copy-from)
                 COPY_FROM="$2"
+                shift 2
+                ;;
+            --base-dir)
+                BASE_DIR="$2"
+                PROFILES_DIR="$BASE_DIR/profiles"
                 shift 2
                 ;;
             --non-interactive)

@@ -9,7 +9,7 @@ set -e  # Exit on error
 
 # Get the directory where this script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-BASE_DIR="$HOME/agent-os"
+BASE_DIR="${BASE_DIR:-$HOME/agent-os}"
 PROFILES_DIR="$BASE_DIR/profiles"
 
 # Source common functions
@@ -648,6 +648,7 @@ OPTIONS:
     --out-of-scope LIST         Comma-separated out-of-scope areas
     --standards LIST            Comma-separated standards (e.g., 'global/*,backend/*')
     --verified-by LIST          Comma-separated verifier IDs (implementers only)
+    --base-dir PATH             Base directory for Agent OS (default: $HOME/agent-os)
     --non-interactive           Run without prompts
     -h, --help                  Show this help message
 
@@ -743,6 +744,11 @@ parse_arguments() {
                 ;;
             --verified-by)
                 IFS=',' read -ra ROLE_VERIFIERS <<< "$2"
+                shift 2
+                ;;
+            --base-dir)
+                BASE_DIR="$2"
+                PROFILES_DIR="$BASE_DIR/profiles"
                 shift 2
                 ;;
             --non-interactive)
