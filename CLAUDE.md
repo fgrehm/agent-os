@@ -28,24 +28,42 @@ This way you can work with all fork features during development, then create a c
 
 The fork-specific additions are maintained in this repository to enhance Agent OS with Claude Code support and specialized profiles for different use cases.
 
-## Architecture
+## Documentation Resources
+
+For detailed explanations of Agent OS concepts and workflows, reference these docs:
+
+- **[Overview](https://buildermethods.com/agent-os)** - Core philosophy and spec-driven development approach
+- **[Modes](https://buildermethods.com/agent-os/modes)** - Multi-agent vs single-agent mode comparison
+- **[Adaptability](https://buildermethods.com/agent-os/adaptability)** - How Agent OS works with different AI tools
+- **[Installation](https://buildermethods.com/agent-os/installation)** - Base and project installation steps
+- **[Workflow](https://buildermethods.com/agent-os/workflow)** - Four-phase development cycle overview
+- **[3-Layer Context](https://buildermethods.com/agent-os/3-layer-context)** - Standards, Product, and Specs layers explained
+- **[Standards](https://buildermethods.com/agent-os/standards)** - Creating and organizing coding standards
+- **[Profiles](https://buildermethods.com/agent-os/profiles)** - Profile inheritance and customization
+- **[Roles](https://buildermethods.com/agent-os/roles)** - Implementers and verifiers system
+- **[Workflows](https://buildermethods.com/agent-os/workflows)** - Reusable instruction blocks and injection
+- **[Verification](https://buildermethods.com/agent-os/verification)** - Quality assurance process
+- **[Visuals](https://buildermethods.com/agent-os/visuals)** - Design-driven development with mockups
+
+### Command Documentation
+
+- **[/plan-product](https://buildermethods.com/agent-os/plan-product)** - Create mission, roadmap, tech-stack
+- **[/new-spec](https://buildermethods.com/agent-os/new-spec)** - Research and gather feature requirements
+- **[/create-spec](https://buildermethods.com/agent-os/create-spec)** - Write detailed spec and task breakdown
+- **[/implement-spec](https://buildermethods.com/agent-os/implement-spec)** - Execute implementation with agents
+
+## Quick Reference
 
 ### Core Concepts
 
-**3-Layer Context System:**
-1. **Standards** (Layer 1): Define HOW to build - coding conventions, patterns, best practices
-2. **Product** (Layer 2): Define WHAT and WHY - mission, roadmap, tech stack
-3. **Specs** (Layer 3): Define WHAT NEXT - specific feature requirements and tasks
+Agent OS uses a **3-layer context system** (Standards → Product → Specs), **profile inheritance** for different project types, and supports both **multi-agent** (parallel subagents) and **single-agent** (sequential prompts) modes. See [documentation links](#documentation-resources) above for detailed explanations.
 
-**Profile System:**
-- Profiles are complete configuration packages containing standards, roles, workflows, agents, and commands
-- Profiles support inheritance via `profile-config.yml` (e.g., `chezmoi` inherits from `navigator` which inherits from `default`)
-- Each profile can override parent files or add new ones
-- Profiles enable different tech stacks, project types, and team conventions
+### Workflow
 
-**Dual Mode Support:**
-- **Multi-agent mode**: Commands delegate to specialized subagents that work in parallel
-- **Single-agent mode**: Commands compile into sequential prompts executed one at a time
+1. **`/plan-product`** (once): Create mission, roadmap, tech-stack
+2. **`/new-spec`** (per feature): Research and gather requirements
+3. **`/create-spec`** (per feature): Write spec and task list
+4. **`/implement-spec`** (per feature): Implement and verify
 
 ### Directory Structure
 
@@ -91,49 +109,24 @@ profiles/[profile-name]/
     └── implementation/   # Implementation workflows
 ```
 
-### How Compilation Works
+### Profile Inheritance Chain
 
-When `project-install.sh` runs, it:
-1. Resolves the profile inheritance chain (e.g., `chezmoi` → `navigator` → `default`)
-2. Merges files from all profiles (child overrides parent)
-3. Processes injection tags like `{{standards/global/*}}` and `{{workflows/implementation/implement-task}}`
-4. Compiles standards into role definitions
-5. Creates `agent-os/` folder in project (with commands, standards, roles, workflows)
-6. Creates `.claude/agents/` folder in multi-agent mode with role-specific agent files
-
-### Injection System
-
-**Workflow injection** (full content):
-```markdown
-{{workflows/implementation/implement-task}}
 ```
-Expands to full content of the workflow file.
-
-**Standards injection** (reference list):
-```yaml
-standards:
-  - global/*
-  - backend/*
+default (base web app profile)
+  ↓
+navigator (adds pause-for-review workflow)
+  ↓
+chezmoi (specialized for dotfiles)
 ```
-Compiles into reference list like: `@agent-os/standards/global/coding-style.md`, `@agent-os/standards/backend/api.md`, etc.
 
-### Roles System
+### How It Works
 
-**Implementers** are specialists:
-- `database-engineer`: Migrations, models, schemas
-- `api-engineer`: Endpoints, controllers, business logic
-- `ui-designer`: Components, views, styling
-- `testing-engineer`: Test coverage
+When `project-install.sh` runs:
+1. Resolves profile inheritance chain and merges files (child overrides parent)
+2. Processes injection tags: `{{workflows/...}}` (expands full content) and `{{standards/...}}` (creates reference lists)
+3. Creates `agent-os/` folder in project and `.claude/agents/` in multi-agent mode
 
-**Verifiers** review implementations:
-- `backend-verifier`: Backend code quality
-- `frontend-verifier`: Frontend code quality
-- `integration-verifier`: Full system integration
-
-Each role in `roles/implementers.yml` or `roles/verifiers.yml` defines:
-- Areas of responsibility
-- Standards to follow
-- Which verifier reviews their work
+See [Profiles](https://buildermethods.com/agent-os/profiles), [Workflows](https://buildermethods.com/agent-os/workflows), and [Roles](https://buildermethods.com/agent-os/roles) docs for details.
 
 ## Common Development Tasks
 
@@ -210,31 +203,6 @@ Commands are organized by mode:
 - `agents/templates/verifier.md`: Template for verifier agents
 
 These templates get compiled with role-specific data from `roles/*.yml`.
-
-## Profile Inheritance Chain
-
-```
-default (base web app profile)
-  ↓
-navigator (adds pause-for-review workflow)
-  ↓
-chezmoi (specialized for dotfiles)
-```
-
-- **default**: Complete profile for web applications with backend/frontend standards
-- **navigator**: Inherits default, overrides commands/agents to add checkpoint pauses
-- **chezmoi**: Inherits navigator, excludes backend/frontend standards, adds dotfiles-specific standards
-
-## Spec-Driven Development Workflow
-
-Projects using Agent OS follow this workflow:
-
-1. **`/plan-product`** (once): Create mission, roadmap, tech-stack
-2. **`/new-spec`** (per feature): Research and gather requirements
-3. **`/create-spec`** (per feature): Write spec and task list
-4. **`/implement-spec`** (per feature): Implement and verify
-
-Each command delegates to appropriate agents based on the active profile's role definitions.
 
 ## Important Conventions
 
