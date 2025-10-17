@@ -54,6 +54,47 @@ This file tracks improvements to contribute back to `buildermethods/agent-os`.
 
 ## Future Ideas
 
+### Improve Flag Handling for Array Values
+
+**Current limitation:** Comma-separated lists for `--responsibilities`, `--out-of-scope`, `--standards`, etc. can be problematic with complex values containing commas or special characters.
+
+**Proposed improvement:** Support repeating flags for array values:
+
+```bash
+~/agent-os/scripts/create-role.sh \
+  --profile rails-api \
+  --type implementer \
+  --id database-engineer \
+  --description "Handles migrations, models, schemas" \
+  --role-text "You are a database engineer..." \
+  --color orange \
+  --responsibilities "Create and manage database migrations" \
+  --responsibilities "Define ActiveRecord models and associations" \
+  --responsibilities "Write efficient SQL queries and optimize database performance" \
+  --out-of-scope "API endpoints and controllers" \
+  --out-of-scope "Frontend UI components" \
+  --standards "global/*" \
+  --standards "backend/*" \
+  --standards "testing/*" \
+  --verified-by "backend-verifier" \
+  --non-interactive
+```
+
+**Benefits:**
+- No escaping issues with commas in values
+- More readable in scripts/documentation
+- Follows common CLI patterns (like `--option value --option value2`)
+- Can still support comma-separated as shorthand
+
+**Implementation approach:**
+- Append to arrays instead of replacing: `ROLE_AREAS+=("$2")`
+- Support both styles: `--responsibilities "a,b,c"` OR `--responsibilities "a" --responsibilities "b" --responsibilities "c"`
+- Document both approaches in help text
+
+---
+
+### Other Ideas
+
 - Profile templates/examples repository
 - Mixins system (per discussion #200)
 - `/remember` command for capturing standards mid-development
