@@ -111,73 +111,105 @@ Suggest colors based on domain:
 - DevOps/Infra: `red`, `yellow`
 - Data/ML: `cyan`, `purple`
 
-## PHASE 4: Role Creation
+## PHASE 4: Delegate to Role Generator Agent
 
-### Option A: Use Interactive Script
+Now that you have gathered all the requirements, delegate to the `role-generator` agent using the Task tool.
 
-Run the existing script:
-```bash
-~/agent-os/scripts/create-role.sh
+```
+Use the role-generator agent to create this role.
+
+Profile: [profile-name]
+Role Type: [Implementer/Verifier]
+Tech Stack: [project's tech stack context]
+
+Role Requirements:
+- ID: [suggested-role-id]
+- Domain: [domain expertise - e.g., "GraphQL API development", "ML pipeline orchestration"]
+- Purpose: [what gap this fills]
+
+Responsibilities:
+[List of 4-6 specific responsibilities gathered from user]
+
+Out of Scope:
+[List of areas this role should NOT handle]
+
+Standards to Follow:
+[List of standard paths - e.g., "global/*", "backend/*", "testing/*"]
+
+Tools:
+[Tool list based on domain]
+
+Model:
+[inherit/sonnet/opus based on complexity]
+
+Color:
+[Suggested color based on domain]
+
+Verifiers: [for implementers only]
+[List of verifier IDs that should review this role's work]
+
+Generate complete YAML with framework-specific terminology and write to the appropriate file.
 ```
 
-Guide the user through prompts with intelligent suggestions based on the discovery phase.
+The role-generator agent will:
+1. Create properly structured YAML
+2. Use framework-specific terminology
+3. Write to ~/agent-os/profiles/[profile]/roles/[implementers|verifiers].yml
+4. Validate structure and report success
 
-### Option B: Generate YAML Directly
+## PHASE 5: Present Results
 
-Create the YAML structure:
+After the agent completes, display the generated role:
 
-**For Implementer:**
-```yaml
-  - id: [role-id]  # e.g., graphql-engineer
-    description: [One-line description]
-    your_role: You are a [role title]. Your role is to [brief description of primary responsibilities].
-    tools: Write, Read, Bash, WebFetch, Glob, Grep  # Add specialized tools
-    model: inherit  # or sonnet/opus
-    color: [suggested-color]
-    areas_of_responsibility:
-      - [Responsibility 1]
-      - [Responsibility 2]
-      - [Responsibility 3]
-    example_areas_outside_of_responsibility:
-      - [Out of scope 1]
-      - [Out of scope 2]
-      - [Out of scope 3]
-    standards:
-      - global/*
-      - [domain]/*
-      - testing/*
-    verified_by:
-      - [verifier-id]
+### For Implementers:
+
+```
+✅ Generated role: [role-id]
+
+📋 Role Details:
+- Type: [Implementer/Verifier]
+- Domain: [e.g., "GraphQL API development"]
+- Tools: [List]
+- Standards: [List]
+- Verified by: [List] (if implementer)
+
+📁 Location: ~/agent-os/profiles/[profile]/roles/[file].yml
+
+🔍 Key Responsibilities:
+  • [Responsibility 1]
+  • [Responsibility 2]
+  • [Responsibility 3]
+  • [Responsibility 4]
+
+🚫 Not Responsible For:
+  • [Out of scope 1]
+  • [Out of scope 2]
+  • [Out of scope 3]
 ```
 
-**For Verifier:**
-```yaml
-  - id: [role-id]  # e.g., security-verifier
-    description: [One-line description of what they verify]
-    your_role: You are a [role title]. Your role is to review and verify [what aspects].
-    tools: Read, Bash, WebFetch, Glob, Grep  # Verifiers typically don't Write
-    model: opus  # Verifiers benefit from stronger reasoning
-    color: [suggested-color]
-    areas_of_responsibility:
-      - Review [aspect 1]
-      - Verify [aspect 2]
-      - Check for [aspect 3]
-    standards:
-      - global/*
-      - [domain]/*
+### For Verifiers:
+
+```
+✅ Generated verifier: [role-id]
+
+📋 Verifier Details:
+- Reviews: [domain - e.g., "Backend API quality and security"]
+- Tools: [List]
+- Standards: [List]
+- Model: opus (for stronger reasoning)
+
+📁 Location: ~/agent-os/profiles/[profile]/roles/verifiers.yml
+
+🔍 Review Focus:
+  • [Review aspect 1]
+  • [Review aspect 2]
+  • [Review aspect 3]
+  • [Review aspect 4]
 ```
 
-**Write to file:**
-```bash
-# Append to appropriate file
-cat >> ~/agent-os/profiles/[profile]/roles/[implementers|verifiers].yml << 'EOF'
-[generated YAML]
-EOF
-```
+## PHASE 6: Validation
 
-## PHASE 5: Validation
-
-After creation:
+The role-generator agent handles validation, but confirm:
 
 1. **Validate YAML syntax**:
    ```bash
@@ -202,7 +234,7 @@ After creation:
    📁 Location: ~/agent-os/profiles/[profile]/roles/[file].yml
    ```
 
-## PHASE 6: Integration Guidance
+## PHASE 7: Integration Guidance
 
 Provide next steps:
 

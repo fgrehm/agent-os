@@ -1,11 +1,6 @@
 <img width="1280" height="640" alt="agent-os-og" src="https://github.com/user-attachments/assets/f70671a2-66e8-4c80-8998-d4318af55d10" />
 
-> **Note**: This is [@fgrehm](https://github.com/fgrehm)'s fork of [buildermethods/agent-os](https://github.com/buildermethods/agent-os) with additional features:
-> - **Claude Code integration** - `.claude/settings.json` and project configuration
-> - **Navigator profile** - Pause-for-review workflow with checkpoints after each phase
-> - **Chezmoi profile** - Specialized roles and standards for dotfiles management
->
-> See [CLAUDE.md](CLAUDE.md) for details on fork-specific features and upstream contribution workflow.
+> **Note**: This is [@fgrehm](https://github.com/fgrehm)'s fork with additional features. See [README-fork.md](README-fork.md) for details.
 
 ## Your system for spec-driven agentic development.
 
