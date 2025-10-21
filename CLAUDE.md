@@ -179,29 +179,44 @@ See [Profiles](https://buildermethods.com/agent-os/profiles), [Workflows](https:
 
 ## Bootstrap Commands
 
-This fork includes Claude Code commands to help create new profiles and roles intelligently:
+This fork includes Claude Code commands to help create new profiles intelligently:
 
 ### `/bootstrap-profile`
 
 Creates a new Agent OS profile tailored to a specific project type or tech stack. This command:
 - Analyzes project characteristics and tech stack (if provided)
-- Suggests appropriate standards, roles, and workflows
+- Suggests appropriate standards and workflows
 - Guides through inheritance and customization decisions
 - Generates complete profile structure
 
-**When to use:** Creating profiles for Rails APIs, Python data science, mobile apps, or any specialized project type.
+**When to use:** Creating profiles for Rails APIs, Python data science, mobile apps, infrastructure (Terraform), or any specialized project type.
 
-### `/bootstrap-role`
+### Best Practices for Bootstrap Commands
 
-Creates a new role (implementer or verifier) based on project needs. This command:
-- Identifies gaps in current role coverage
-- Defines clear responsibilities and boundaries
-- Configures tools, standards, and verification
-- Generates YAML role definition
+When writing or updating bootstrap commands (or any `.claude/commands/` files):
 
-**When to use:** Adding specialized roles like "GraphQL engineer", "ML pipeline engineer", "accessibility expert", or "security verifier".
+**Make commands atemporal and self-sufficient:**
+- ❌ Don't reference specific versions (v2.0, v2.1.0, etc.)
+- ❌ Don't include "What changed from X to Y" sections
+- ✅ Document the current structure as if it's always been this way
+- ✅ Make the command work standalone without external context
 
-These commands wrap the bash scripts (`create-profile.sh`, `create-role.sh`) with intelligent analysis and suggestions.
+**Rationale:** Commands should describe "what to do now" not "how we got here". Version history belongs in CHANGELOG.md and git history, not in operational commands.
+
+**Example:**
+```markdown
+# Bad
+## Notes for v2.1.0
+- Roles system removed in v2.1.0
+- New 6-phase workflow introduced
+
+# Good
+## Additional Notes
+- For specialized subagents, create them manually using Claude Code's subagent feature
+- Profiles can inherit from other profiles for configuration reuse
+```
+
+This keeps commands maintainable and prevents them from becoming historical documentation that confuses users about current capabilities.
 
 ## Common Development Tasks
 

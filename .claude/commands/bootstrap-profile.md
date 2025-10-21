@@ -10,7 +10,7 @@ You are helping create a new Agent OS profile tailored to a specific project typ
 
 This command will guide the user through:
 1. **Discovery**: Understanding the target project type and requirements
-2. **Analysis**: Identifying appropriate standards, roles, and workflows
+2. **Analysis**: Identifying appropriate standards and workflows
 3. **Creation**: Generating the profile structure with customized configurations
 
 ## PHASE 1: Gather Requirements
@@ -18,7 +18,7 @@ This command will guide the user through:
 Ask the user:
 
 1. **What type of project is this profile for?**
-   - Provide examples: "Rails API", "NextJS fullstack", "Python data science", "WordPress", "Rust CLI", etc.
+   - Provide examples: "Rails API", "NextJS fullstack", "Python data science", "WordPress", "Rust CLI", "Terraform infrastructure", etc.
    - If they have a specific project directory, offer to analyze it
 
 2. **Should this profile inherit from an existing profile?**
@@ -28,8 +28,9 @@ Ask the user:
 
 3. **What makes this profile unique?**
    - What standards differ from the parent profile?
-   - What roles are needed? (e.g., "mobile developer", "data engineer", "DevOps engineer")
-   - Any special workflows or commands?
+   - What specialized workflows are needed?
+   - Any custom commands to override?
+   - Will this use Claude Code Skills for standards?
 
 ## PHASE 2: Project Analysis (Optional)
 
@@ -40,6 +41,7 @@ If the user provides a project directory path, analyze:
 - Identify frameworks: React/Next/Vue, Rails/Django/FastAPI, etc.
 - Note databases: PostgreSQL, MongoDB, SQLite mentions
 - Detect tools: Docker, CI configs, test frameworks
+- Infrastructure: Terraform, CloudFormation, Kubernetes configs
 
 **Code Pattern Scanning:**
 - Look for architectural patterns (MVC, microservices, monorepo)
@@ -63,14 +65,13 @@ profile_name="[name-from-phase-1]"
 base_dir="$HOME/agent-os"
 
 # Create directory structure
-mkdir -p "$base_dir/profiles/$profile_name"/{standards/{global,backend,frontend,testing},workflows/{implementation,planning,specification},roles,commands}
+mkdir -p "$base_dir/profiles/$profile_name"/{standards/{global,backend,frontend,testing},workflows/{implementation,planning,specification},agents,commands}
 ```
 
 **Create `profile-config.yml`:**
 
 Based on Phase 1 decisions, determine inheritance:
 - Web apps → inherit from `default`
-- Dotfiles → inherit from `chezmoi` (if available)
 - Specialized → appropriate parent or `inherits_from: false`
 
 Write the configuration file:
@@ -85,12 +86,16 @@ inherits_from: [parent-profile or false]
 # exclude_inherited_files:
 #   - standards/frontend/*  # Example for API-only profiles
 #   - workflows/implementation/ui-specific.md
+#   - commands/shape-spec/*  # If you want to provide custom command
 ```
 
 **Directory structure created:**
 ```
 ~/agent-os/profiles/[profile-name]/
 ├── profile-config.yml
+├── agents/
+│   └── implementer.md          # Generic implementer for this profile
+├── claude-code-skill-template.md  # Template for Skills descriptions
 ├── standards/
 │   ├── global/
 │   ├── backend/
@@ -100,11 +105,66 @@ inherits_from: [parent-profile or false]
 │   ├── implementation/
 │   ├── planning/
 │   └── specification/
-├── roles/
-└── commands/
+└── commands/                   # Override specific commands if needed
+    ├── shape-spec/
+    ├── write-spec/
+    ├── create-tasks/
+    ├── implement-tasks/
+    └── orchestrate-tasks/
 ```
 
-## PHASE 4: Create Standards Files
+## PHASE 4: Create Core Files
+
+### 4.1 Create `claude-code-skill-template.md`
+
+Copy from default profile or create:
+
+```markdown
+# [Skill Title]
+
+Brief description of what this standard covers.
+
+## When to Apply
+
+Describe when Claude should use this skill.
+
+## Key Patterns
+
+[Concrete examples and patterns specific to your tech stack]
+
+## Related Standards
+
+- Related standard 1
+- Related standard 2
+```
+
+### 4.2 Create `agents/implementer.md`
+
+Create a generic implementer agent for this profile:
+
+```markdown
+---
+name: implementer
+description: Use proactively to implement features for [profile-type] projects following [framework] best practices
+tools: Write, Read, Bash, WebFetch, Playwright
+color: red
+model: inherit
+---
+
+You are a [specialized description - e.g., "full stack Rails developer", "infrastructure engineer", "data scientist"] with deep expertise in [key areas]. Your role is to implement features by closely following specifications and adhering to [framework/language] conventions.
+
+{{workflows/implementation/implement-tasks}}
+
+{{UNLESS standards_as_claude_code_skills}}
+## User Standards & Preferences Compliance
+
+IMPORTANT: Ensure your implementation IS ALIGNED and DOES NOT CONFLICT with the user's preferred tech stack, coding conventions, and patterns as detailed in:
+
+{{standards/*}}
+{{ENDUNLESS standards_as_claude_code_skills}}
+```
+
+## PHASE 5: Create Standards Files
 
 Based on Phase 2 analysis, create focused standard files in the generated directories:
 
@@ -128,87 +188,34 @@ Example structure:
 1. Identify patterns from analysis
 2. Create focused files (keep under 300 lines each)
 3. Use concrete examples over vague guidance
+4. If using Skills: Write clear descriptions for discoverability
+5. Use the skill template structure for consistency
 
 **Prompt user:**
 "For [CATEGORY], what are the key patterns/conventions this project follows? (e.g., for API design: RESTful conventions, versioning strategy, error response format)"
 
-## PHASE 5: Generate Role Definitions
+### Skills-Specific Guidance
 
-Based on project analysis, create role definitions by delegating to the `role-generator` agent for each needed role.
+If user wants to use Claude Code Skills (`standards_as_claude_code_skills: true`):
 
-### Determine Required Roles
+1. **Write discoverable descriptions**: Start each standard with a clear summary
+2. **Use specific keywords**: Include terms Claude should recognize (e.g., "Rails", "API", "database")
+3. **Plan to run `/improve-skills`**: After installation, this command optimizes skill descriptions
+4. **Focus on "when to apply"**: Help Claude understand context for using each skill
 
-**Based on analysis, identify roles needed:**
+## PHASE 6: Optional Custom Commands
 
-**For most projects:**
-- `database-engineer` - Database operations
-- `api-engineer` - Backend/API logic
-- `testing-engineer` - Test coverage
-- Backend verifier
+If the profile needs custom workflow variations, create command overrides:
 
-**Add if frontend detected:**
-- `ui-designer` - Frontend components
-- Frontend verifier
+**Example: Custom orchestrate-tasks for infrastructure projects:**
 
-**Add for specializations:**
-- GraphQL → `graphql-engineer`
-- WebSockets → `realtime-engineer`
-- Docker/K8s → `infrastructure-engineer`
-- ML/data → `ml-engineer`, `data-engineer`
-- Mobile → `mobile-developer`
-- Background jobs → `job-queue-engineer`
-
-### Delegate to Role Generator Agent
-
-For each role, use the Task tool to invoke the `role-generator` agent:
-
-```
-Use the role-generator agent to create a role for this profile.
-
-Profile: [profile-name]
-Tech Stack: [detected stack - e.g., "Rails API with PostgreSQL, Sidekiq, RSpec"]
-
-Role: database-engineer
-Type: Implementer
-Domain: Database operations for [framework]
-Responsibilities:
-  - [Framework]-specific database work (e.g., "Rails migrations", "Prisma schema")
-  - [Specific patterns identified in analysis]
-
-Generate complete YAML with framework-specific language.
+```bash
+mkdir -p "$base_dir/profiles/$profile_name/commands/orchestrate-tasks"
 ```
 
-**Repeat for each role** (api-engineer, ui-designer, testing-engineer, verifiers, specialized roles).
+Create customized command that references profile-specific workflows.
 
-The role-generator agent will:
-1. Create properly structured YAML
-2. Use framework-specific terminology
-3. Write to appropriate file (implementers.yml or verifiers.yml)
-4. Validate structure
-
-### Present Results
-
-After all roles are generated:
-
-```
-🤖 Generated [N] role definitions for your [tech-stack] profile:
-
-Implementers:
-  ✓ database-engineer ([framework]-specific database work)
-  ✓ api-engineer ([framework]-specific API work)
-  ✓ ui-designer ([framework]-specific frontend) [if applicable]
-  ✓ testing-engineer ([test-framework] focused)
-
-Verifiers:
-  ✓ backend-verifier
-  ✓ frontend-verifier [if applicable]
-
-📁 Location: ~/agent-os/profiles/[profile-name]/roles/
-
-Would you like to add more specialized roles?
-```
-
-## PHASE 6: Documentation
+## PHASE 7: Documentation
 
 Create `profiles/[name]/README.md`:
 
@@ -218,17 +225,40 @@ Create `profiles/[name]/README.md`:
 ## Purpose
 [Brief description of what projects this profile is for]
 
+## Tech Stack
+- [Primary language/framework]
+- [Key tools/libraries]
+- [Infrastructure/deployment tools]
+
 ## Inherits From
 `[parent-profile]`
 
 ## Customizations
 - **Standards**: [List overridden/added standards]
-- **Roles**: [List custom roles]
-- **Workflows**: [List custom workflows if any]
+- **Agents**: [Custom implementer description]
+- **Commands**: [List command overrides if any]
 
-## Usage
+## Configuration
+
+Supports both traditional standards injection and Claude Code Skills mode.
+
+### Installation
+
 \`\`\`bash
 ~/agent-os/scripts/project-install.sh --profile [name]
+\`\`\`
+
+### With Claude Code Skills
+
+\`\`\`bash
+# config.yml should have:
+# standards_as_claude_code_skills: true
+
+~/agent-os/scripts/project-install.sh --profile [name]
+
+# Then optimize skills:
+cd your-project
+/improve-skills
 \`\`\`
 
 ## Example Projects
@@ -244,17 +274,34 @@ Display to the user:
 
 📁 Location: ~/agent-os/profiles/[name]
 
+📋 Structure Created:
+  ✓ profile-config.yml (inheritance configured)
+  ✓ claude-code-skill-template.md
+  ✓ agents/implementer.md
+  ✓ standards/ (ready for customization)
+  ✓ workflows/ (inherits from parent)
+  ✓ commands/ (ready for overrides)
+
 📋 Next Steps:
 1. Review and customize standards in profiles/[name]/standards/
-2. Add roles with: ~/agent-os/scripts/create-role.sh
-3. Test in a project: ~/agent-os/scripts/project-install.sh --profile [name]
+2. Update agents/implementer.md with profile-specific expertise
+3. Test in a project:
+   ~/agent-os/scripts/project-install.sh --profile [name]
+4. If using Skills, run /improve-skills in your project
+
+💡 Tips:
+- Keep standards modular (one concern per file)
+- Use concrete examples over abstract principles
+- Start minimal, expand based on patterns you see frequently
+- Consider creating specialized workflow overrides in commands/
 
 📚 Docs: https://buildermethods.com/agent-os/profiles
 ```
 
-## Notes
+## Additional Notes
 
-- Keep standards modular and focused (one concern per file)
-- Use concrete examples over abstract principles
-- Start minimal, expand based on patterns you correct frequently
-- Consider creating mixins for common add-ons (auth, Docker, etc.)
+**Specialized Subagents:**
+If you need specialized subagents for task orchestration, create them manually using Claude Code's subagent feature. Reference your profile's standards in their instructions for consistency.
+
+**Profile Inheritance:**
+Profiles can inherit from other profiles and override specific files. The inheritance system allows you to build specialized profiles while reusing common configurations.
