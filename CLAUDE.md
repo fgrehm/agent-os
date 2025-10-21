@@ -64,14 +64,14 @@ The fork-specific additions are maintained in this repository to enhance Agent O
 For detailed explanations of Agent OS concepts and workflows, reference these docs:
 
 - **[Overview](https://buildermethods.com/agent-os)** - Core philosophy and spec-driven development approach
-- **[Modes](https://buildermethods.com/agent-os/modes)** - Multi-agent vs single-agent mode comparison
+- **[Modes](https://buildermethods.com/agent-os/modes)** - Configuration options and flexibility
 - **[Adaptability](https://buildermethods.com/agent-os/adaptability)** - How Agent OS works with different AI tools
 - **[Installation](https://buildermethods.com/agent-os/installation)** - Base and project installation steps
-- **[Workflow](https://buildermethods.com/agent-os/workflow)** - Four-phase development cycle overview
+- **[Workflow](https://buildermethods.com/agent-os/workflow)** - Six-phase development cycle overview
 - **[3-Layer Context](https://buildermethods.com/agent-os/3-layer-context)** - Standards, Product, and Specs layers explained
 - **[Standards](https://buildermethods.com/agent-os/standards)** - Creating and organizing coding standards
+- **[Skills](https://buildermethods.com/agent-os/skills)** - Claude Code Skills integration
 - **[Profiles](https://buildermethods.com/agent-os/profiles)** - Profile inheritance and customization
-- **[Roles](https://buildermethods.com/agent-os/roles)** - Implementers and verifiers system
 - **[Workflows](https://buildermethods.com/agent-os/workflows)** - Reusable instruction blocks and injection
 - **[Verification](https://buildermethods.com/agent-os/verification)** - Quality assurance process
 - **[Visuals](https://buildermethods.com/agent-os/visuals)** - Design-driven development with mockups
@@ -79,9 +79,11 @@ For detailed explanations of Agent OS concepts and workflows, reference these do
 ### Command Documentation
 
 - **[/plan-product](https://buildermethods.com/agent-os/plan-product)** - Create mission, roadmap, tech-stack
-- **[/new-spec](https://buildermethods.com/agent-os/new-spec)** - Research and gather feature requirements
-- **[/create-spec](https://buildermethods.com/agent-os/create-spec)** - Write detailed spec and task breakdown
-- **[/implement-spec](https://buildermethods.com/agent-os/implement-spec)** - Execute implementation with agents
+- **[/shape-spec](https://buildermethods.com/agent-os/shape-spec)** - Shape rough ideas into requirements
+- **[/write-spec](https://buildermethods.com/agent-os/write-spec)** - Write detailed specification
+- **[/create-tasks](https://buildermethods.com/agent-os/create-tasks)** - Break spec into task list
+- **[/implement-tasks](https://buildermethods.com/agent-os/implement-tasks)** - Simple implementation
+- **[/orchestrate-tasks](https://buildermethods.com/agent-os/orchestrate-tasks)** - Advanced multi-agent orchestration
 
 ### Searching Upstream Community
 
@@ -105,29 +107,34 @@ To research community patterns, profile examples, and customization approaches:
 
 ### Core Concepts
 
-Agent OS uses a **3-layer context system** (Standards → Product → Specs), **profile inheritance** for different project types, and supports both **multi-agent** (parallel subagents) and **single-agent** (sequential prompts) modes. See [documentation links](#documentation-resources) above for detailed explanations.
+Agent OS uses a **3-layer context system** (Standards → Product → Specs), **profile inheritance** for different project types, and **Claude Code Skills** for context-efficient standards application. See [documentation links](#documentation-resources) above for detailed explanations.
 
 ### Workflow
 
-1. **`/plan-product`** (once): Create mission, roadmap, tech-stack
-2. **`/new-spec`** (per feature): Research and gather requirements
-3. **`/create-spec`** (per feature): Write spec and task list
-4. **`/implement-spec`** (per feature): Implement and verify
+**Phase 1** (run once):
+- **`/plan-product`**: Create mission, roadmap, tech-stack
+
+**Phases 2-6** (per feature, use what you need):
+- **`/shape-spec`**: Shape rough ideas into clear requirements (optional if requirements known)
+- **`/write-spec`**: Write detailed specification
+- **`/create-tasks`**: Break spec into grouped, prioritized tasks
+- **`/implement-tasks`**: Simple implementation for smaller features
+- **`/orchestrate-tasks`**: Advanced orchestration for complex features with specialized subagents
 
 ### Directory Structure
 
 ```
 agent-os/
 ├── profiles/              # Profile configurations
-│   ├── default/          # Base profile for web apps
-│   ├── navigator/        # Adds pause-for-review workflow
-│   └── chezmoi/          # Specialized for dotfiles management
+│   └── default/          # Base profile for web apps
 ├── scripts/              # Installation and management scripts
 │   ├── base-install.sh   # Installs Agent OS to ~/agent-os
 │   ├── project-install.sh # Compiles profile into project
 │   ├── project-update.sh  # Updates existing installation
-│   ├── create-profile.sh  # Creates new profiles
-│   └── create-role.sh     # Creates new roles
+│   └── create-profile.sh  # Creates new profiles
+├── .claude/              # Fork-specific Claude Code integration
+│   ├── commands/         # Bootstrap commands
+│   └── settings.json     # Permissions and preferences
 └── CLAUDE.md             # This file
 ```
 
@@ -137,45 +144,46 @@ Each profile contains:
 
 ```
 profiles/[profile-name]/
-├── profile-config.yml     # Inheritance and exclusion config
-├── agents/                # Agent definitions and templates
-│   └── templates/         # Reusable agent templates
-├── commands/              # Slash commands (/plan-product, /new-spec, etc.)
-│   ├── [command]/
-│   │   ├── multi-agent/  # Multi-agent orchestration
-│   │   └── single-agent/ # Sequential single-agent prompts
-├── roles/                 # Role definitions
-│   ├── implementers.yml  # Specialized implementer agents
-│   └── verifiers.yml     # Verification agents
-├── standards/             # Coding standards and conventions
-│   ├── global/           # Cross-cutting standards
-│   ├── backend/          # Backend-specific standards
-│   ├── frontend/         # Frontend-specific standards
-│   └── testing/          # Testing standards
-└── workflows/             # Reusable instruction blocks
-    ├── planning/         # Product planning workflows
-    ├── specification/    # Spec creation workflows
-    └── implementation/   # Implementation workflows
+├── profile-config.yml          # Inheritance and exclusion config
+├── claude-code-skill-template.md  # Template for Skills descriptions
+├── agents/                     # Agent definitions
+│   └── implementer.md         # Generic implementer agent
+├── commands/                   # Slash commands (can override inherited)
+│   ├── plan-product/
+│   ├── shape-spec/
+│   ├── write-spec/
+│   ├── create-tasks/
+│   ├── implement-tasks/
+│   ├── orchestrate-tasks/
+│   └── improve-skills/
+├── standards/                  # Coding standards and conventions
+│   ├── global/                # Cross-cutting standards
+│   ├── backend/               # Backend-specific standards
+│   ├── frontend/              # Frontend-specific standards
+│   └── testing/               # Testing standards
+└── workflows/                  # Reusable instruction blocks
+    ├── planning/              # Product planning workflows
+    ├── specification/         # Spec creation workflows
+    └── implementation/        # Implementation workflows
 ```
 
-### Profile Inheritance Chain
+### Profile Inheritance
 
-```
-default (base web app profile)
-  ↓
-navigator (adds pause-for-review workflow)
-  ↓
-chezmoi (specialized for dotfiles)
-```
+Profiles can inherit from other profiles using `profile-config.yml`:
+- Child profiles override parent files with same path
+- Can exclude specific inherited files via `exclude_inherited_files`
+- Allows building specialized profiles while reusing common configurations
 
 ### How It Works
 
 When `project-install.sh` runs:
 1. Resolves profile inheritance chain and merges files (child overrides parent)
 2. Processes injection tags: `{{workflows/...}}` (expands full content) and `{{standards/...}}` (creates reference lists)
-3. Creates `agent-os/` folder in project and `.claude/agents/` in multi-agent mode
+3. Creates `agent-os/` folder in project
+4. If Claude Code is enabled, installs commands to `.claude/commands/agent-os/`
+5. If Skills mode enabled, converts standards to `.claude/skills/` (then run `/improve-skills`)
 
-See [Profiles](https://buildermethods.com/agent-os/profiles), [Workflows](https://buildermethods.com/agent-os/workflows), and [Roles](https://buildermethods.com/agent-os/roles) docs for details.
+See [Profiles](https://buildermethods.com/agent-os/profiles), [Workflows](https://buildermethods.com/agent-os/workflows), and [Skills](https://buildermethods.com/agent-os/skills) docs for details.
 
 ## Bootstrap Commands
 
@@ -240,18 +248,12 @@ bash scripts/base-install.sh
 scripts/create-profile.sh
 ```
 
-Follow prompts to specify:
-- Profile name
-- Parent profile to inherit from
-- Which inherited files to exclude
-
-### Creating a New Role
-
+Or use the intelligent bootstrap command:
 ```bash
-scripts/create-role.sh
+/bootstrap-profile
 ```
 
-Define the role's expertise, responsibilities, standards, and verifier assignments.
+The bootstrap command analyzes your project and suggests appropriate standards, workflows, and configurations.
 
 ### Validating Shell Scripts
 
@@ -278,31 +280,27 @@ grep -A 20 "exclude_inherited_files:" profiles/*/profile-config.yml
 ### Profile Configuration
 
 - `profiles/[name]/profile-config.yml`: Controls inheritance and file exclusions
-- `profiles/[name]/roles/implementers.yml`: Defines implementer roles with their responsibilities and standards
-- `profiles/[name]/roles/verifiers.yml`: Defines verifier roles
+- `profiles/[name]/claude-code-skill-template.md`: Template for Skills descriptions
+- `profiles/[name]/agents/implementer.md`: Generic implementer agent for the profile
 
 ### Commands
 
-Commands are organized by mode:
-- `commands/[name]/multi-agent/`: Orchestrates subagents
-- `commands/[name]/single-agent/`: Sequential prompt files
+Commands can be provided in multiple formats:
+- `commands/[name]/multi-agent/`: Delegates to Claude Code subagents
+- `commands/[name]/single-agent/`: Sequential prompts for step-by-step execution
+- `commands/[name]/[command-name].md`: Single-file command (simpler commands)
 
-### Agent Templates
-
-- `agents/templates/implementer.md`: Template for implementer agents
-- `agents/templates/verifier.md`: Template for verifier agents
-
-These templates get compiled with role-specific data from `roles/*.yml`.
+Profiles can override inherited commands by providing files with the same path.
 
 ## Important Conventions
 
 ### File Naming in Specs
 
 When implementing features, agents create:
+- `agent-os/specs/[date]-[feature]/planning/requirements.md`: Requirements and research
 - `agent-os/specs/[date]-[feature]/spec.md`: Feature specification
 - `agent-os/specs/[date]-[feature]/tasks.md`: Task breakdown with checkboxes
-- `agent-os/specs/[date]-[feature]/implementation/[N]-[name].md`: Implementation reports
-- `agent-os/specs/[date]-[feature]/verification/[role]-verification.md`: Verification reports
+- `agent-os/specs/[date]-[feature]/orchestration.yml`: Task group assignments (for orchestrate-tasks)
 
 ### Standards Organization
 
@@ -311,11 +309,4 @@ Standards should be:
 - **Specific**: Concrete rules, not vague advice
 - **Example-driven**: Show how to follow the standard
 - **Minimal**: Start small, expand based on patterns you correct frequently
-
-### Role Responsibilities
-
-Keep implementer responsibilities focused:
-- Clear areas of responsibility
-- Clear areas OUTSIDE of responsibility (prevents overlap)
-- Appropriate standards for the domain
-- Matched with appropriate verifiers
+- **Discoverable** (for Skills): Clear descriptions with relevant keywords
