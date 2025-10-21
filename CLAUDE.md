@@ -10,16 +10,19 @@ Agent OS is a framework for spec-driven agentic development. It transforms AI co
 
 This repository is a fork of `buildermethods/agent-os`. The upstream project does NOT include:
 - `.claude/` directory and Claude Code integration
-- `navigator` profile (pause-for-review workflow)
-- `chezmoi` profile (dotfiles management)
+- `/bootstrap-profile` command
+- Enhanced installation scripts (`--base-dir`, non-interactive mode)
+
+**Fork-specific changes**: See [CHANGELOG-fork.md](./CHANGELOG-fork.md) for fork history
+**Upstream changes**: See [CHANGELOG.md](./CHANGELOG.md) for upstream Agent OS releases
 
 **Workflow for upstream contributions**:
-1. Develop changes normally in your fork (using Claude Code, navigator profile, etc.)
+1. Develop changes normally in your fork (using Claude Code, bootstrap commands, etc.)
 2. When ready to contribute upstream:
    ```bash
    git checkout -b upstream-contribution upstream/main
    git cherry-pick <commits>  # or manually apply changes
-   # Remove/adapt any fork-specific features (.claude/, navigator/chezmoi references)
+   # Remove/adapt any fork-specific features (.claude/, bootstrap commands, --base-dir flag)
    git push origin upstream-contribution
    ```
 3. Create PR from `upstream-contribution` branch to `buildermethods/agent-os`
@@ -34,8 +37,8 @@ To make upstream contributions easier, structure commits so upstream-compatible 
   - Example: `feat(scripts): add --base-dir flag to installation scripts`
   - Can be cherry-picked directly to upstream branch
 
-- **Fork-specific commits**: Changes to `.claude/`, navigator/chezmoi profiles, TODO.md ideas
-  - Example: `docs(TODO): add future improvement ideas`
+- **Fork-specific commits**: Changes to `.claude/`, CHANGELOG-fork.md, fork documentation
+  - Example: `feat(bootstrap): add /bootstrap-profile command`
   - Kept in fork, not included in upstream PR
 
 **Example workflow**:
@@ -45,8 +48,8 @@ git add scripts/*.sh
 git commit -m "feat(scripts): add --base-dir flag to installation scripts"
 
 # Separately commit fork-specific changes
-git add TODO.md
-git commit -m "docs(TODO): add ideas for future improvements"
+git add .claude/commands/bootstrap-profile.md
+git commit -m "feat(bootstrap): add /bootstrap-profile command"
 
 # Later, cherry-pick only upstream-ready commits
 git checkout -b upstream-contribution upstream/main
