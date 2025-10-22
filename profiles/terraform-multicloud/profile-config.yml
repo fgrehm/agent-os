@@ -1,0 +1,7 @@
+# Terraform Multi-Cloud Profile
+#
+# Specialized profile for infrastructure as code using Terraform across
+# multiple cloud providers (AWS, Azure, GCP, etc.).
+# Standalone profile focused solely on infrastructure concerns.
+
+inherits_from: false
