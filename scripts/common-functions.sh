@@ -424,12 +424,12 @@ get_profile_files() {
 
                 # Check if excluded
                 excluded="false"
-                echo "$excluded_patterns" | while read pattern; do
+                while read pattern; do
                     if [[ -n "$pattern" ]] && match_pattern "$relative_path" "$pattern"; then
                         excluded="true"
                         break
                     fi
-                done
+                done <<< "$excluded_patterns"
 
                 if [[ "$excluded" != "true" ]]; then
                     # Check if already in list (override scenario)

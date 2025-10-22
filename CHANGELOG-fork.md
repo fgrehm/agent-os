@@ -8,6 +8,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- **exclude_inherited_files bug for Claude Code Skills**: Fixed subshell variable scope bug in `get_profile_files()` function
+  - **Issue**: When a profile used `exclude_inherited_files` to exclude certain standards (e.g., chezmoi profile excludes `standards/backend/*` and `standards/frontend/*`), the exclusion worked correctly for copying standards to `agent-os/standards/` but FAILED for creating Claude Code Skills in `.claude/skills/`. Backend and frontend skills were incorrectly created even though those standards were excluded.
+  - **Root cause**: Line 427 in `scripts/common-functions.sh` used a pipe (`echo "$excluded_patterns" | while read pattern; do`) which created a subshell. When `excluded="true"` was set inside the subshell, that change didn't persist to the parent shell, so the exclusion check always failed.
+  - **Fix**: Replaced pipe with process substitution (`while read pattern; do ... done <<< "$excluded_patterns"`) to keep the while loop in the current shell scope, allowing the `excluded` variable to persist correctly.
+  - **Impact**: Profiles with exclusions now correctly exclude those standards from Skills generation. For example, chezmoi profile now creates only 30 relevant skills (configuration, documentation, global, scripts, templates, testing) instead of 30+ backend/frontend skills that don't apply.
+  - Matches upstream issue: https://github.com/buildermethods/agent-os/discussions/240
+
 ### Added
 
 - **Claude-code profile for v2.1.0**: New standalone profile for Claude Code extension development
