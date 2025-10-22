@@ -130,7 +130,8 @@ Agent OS uses a **3-layer context system** (Standards → Product → Specs), **
 agent-os/
 ├── profiles/              # Profile configurations
 │   ├── default/          # Base profile for web apps
-│   └── chezmoi/          # Dotfiles management with chezmoi
+│   ├── chezmoi/          # Dotfiles management with chezmoi
+│   └── terraform-multicloud/  # Infrastructure as code (Terraform)
 ├── scripts/              # Installation and management scripts
 │   ├── base-install.sh   # Installs Agent OS to ~/agent-os
 │   ├── project-install.sh # Compiles profile into project
