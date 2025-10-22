@@ -1284,17 +1284,27 @@ convert_filename_to_human_name() {
     # Convert to lowercase first
     name=$(echo "$name" | tr '[:upper:]' '[:lower:]')
 
+    # Detect sed variant and set word boundary syntax
+    local IS_GNU_SED=$(sed --version 2>/dev/null | grep -q "GNU sed" && echo TRUE || echo FALSE)
+    local WORD_OPEN WORD_CLOSE
+    if [ "$IS_GNU_SED" = 'TRUE' ]; then
+        WORD_OPEN="\\b"
+        WORD_CLOSE="\\b"
+    else
+        WORD_OPEN="[[:<:]]"
+        WORD_CLOSE="[[:>:]]"
+    fi
+
     # Replace known acronyms with uppercase version
     # Match all case variations: lowercase, Capitalized, UPPERCASE
     for acronym in "${acronyms[@]}"; do
         local lowercase=$(echo "$acronym" | tr '[:upper:]' '[:lower:]')
         local capitalized=$(echo "$lowercase" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
 
-        # Replace all variations with the uppercase acronym
-        # Use [[:<:]] and [[:>:]] for BSD sed word boundaries
-        name=$(echo "$name" | sed -E "s/[[:<:]]$lowercase[[:>:]]/$acronym/g")
-        name=$(echo "$name" | sed -E "s/[[:<:]]$capitalized[[:>:]]/$acronym/g")
-        name=$(echo "$name" | sed -E "s/[[:<:]]$acronym[[:>:]]/$acronym/g")
+        # Replace all variations with the uppercase acronym using detected word boundaries
+        name=$(echo "$name" | sed -E "s/$WORD_OPEN$lowercase$WORD_CLOSE/$acronym/g")
+        name=$(echo "$name" | sed -E "s/$WORD_OPEN$capitalized$WORD_CLOSE/$acronym/g")
+        name=$(echo "$name" | sed -E "s/$WORD_OPEN$acronym$WORD_CLOSE/$acronym/g")
     done
 
     echo "$name"
@@ -1320,17 +1330,27 @@ convert_filename_to_human_name_capitalized() {
     # Capitalize first letter of each word
     name=$(echo "$name" | awk '{for(i=1;i<=NF;i++)sub(/./,toupper(substr($i,1,1)),$i)}1')
 
+    # Detect sed variant and set word boundary syntax
+    local IS_GNU_SED=$(sed --version 2>/dev/null | grep -q "GNU sed" && echo TRUE || echo FALSE)
+    local WORD_OPEN WORD_CLOSE
+    if [ "$IS_GNU_SED" = 'TRUE' ]; then
+        WORD_OPEN="\\b"
+        WORD_CLOSE="\\b"
+    else
+        WORD_OPEN="[[:<:]]"
+        WORD_CLOSE="[[:>:]]"
+    fi
+
     # Replace known acronyms with uppercase version
     # Match all case variations: lowercase, Capitalized, UPPERCASE
     for acronym in "${acronyms[@]}"; do
         local lowercase=$(echo "$acronym" | tr '[:upper:]' '[:lower:]')
         local capitalized=$(echo "$lowercase" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
 
-        # Replace all variations with the uppercase acronym
-        # Use [[:<:]] and [[:>:]] for BSD sed word boundaries
-        name=$(echo "$name" | sed -E "s/[[:<:]]$lowercase[[:>:]]/$acronym/g")
-        name=$(echo "$name" | sed -E "s/[[:<:]]$capitalized[[:>:]]/$acronym/g")
-        name=$(echo "$name" | sed -E "s/[[:<:]]$acronym[[:>:]]/$acronym/g")
+        # Replace all variations with the uppercase acronym using detected word boundaries
+        name=$(echo "$name" | sed -E "s/$WORD_OPEN$lowercase$WORD_CLOSE/$acronym/g")
+        name=$(echo "$name" | sed -E "s/$WORD_OPEN$capitalized$WORD_CLOSE/$acronym/g")
+        name=$(echo "$name" | sed -E "s/$WORD_OPEN$acronym$WORD_CLOSE/$acronym/g")
     done
     echo "$name"
 }
