@@ -10,6 +10,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- **Terraform-multicloud profile for v2.1.0**: Recreated standalone infrastructure profile
+  - Standalone profile focused solely on infrastructure as code
+  - 10 standards files covering Terraform, multi-cloud, testing, and CI/CD
+  - Single implementer agent specialized for infrastructure engineering
+  - Standards cover: naming conventions, environment strategy, state management, module design, provider patterns, security compliance, CI/CD integration, Terratest testing, and **resource imports**
+  - New resource-imports.md standard provides comprehensive guidance on importing existing infrastructure while ensuring compliance with naming conventions, tagging, and security standards
+  - Suitable for AWS, Azure, GCP, Cloudflare, and other cloud providers
+
 - **Chezmoi profile for v2.1.0**: Recreated chezmoi profile with enhanced best practices
   - Inherits from default profile, excludes backend/frontend standards
   - 29 standards files covering chezmoi-specific development patterns
