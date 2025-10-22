@@ -131,6 +131,7 @@ agent-os/
 ├── profiles/              # Profile configurations
 │   ├── default/          # Base profile for web apps
 │   ├── chezmoi/          # Dotfiles management with chezmoi
+│   ├── claude-code/      # Claude Code commands, agents, and skills development
 │   └── terraform-multicloud/  # Infrastructure as code (Terraform)
 ├── scripts/              # Installation and management scripts
 │   ├── base-install.sh   # Installs Agent OS to ~/agent-os
@@ -238,14 +239,19 @@ This keeps commands maintainable and prevents them from becoming historical docu
 Run scripts in dry-run mode or in Docker containers to avoid modifying the host system:
 
 ```bash
-# Dry run to see what would happen
-scripts/project-install.sh --dry-run
+# Dry run to see what would happen (when testing from Agent OS repo itself)
+scripts/project-install.sh --profile <profile-name> --base-dir $(pwd) --dry-run
+
+# Dry run from another project (Agent OS already installed)
+scripts/project-install.sh --profile <profile-name> --dry-run
 
 # Test in Docker
 docker run -it --rm -v $(pwd):/agent-os ubuntu:latest bash
 cd /agent-os
 bash scripts/base-install.sh
 ```
+
+**Important:** When testing profile installation from the Agent OS repository itself (not from a separate project), you must use `--base-dir $(pwd)` to tell the script where to find the profiles directory. Without this flag, the script looks in `~/agent-os` by default.
 
 ### Creating a New Profile
 

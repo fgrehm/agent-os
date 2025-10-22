@@ -10,6 +10,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- **Claude-code profile for v2.1.0**: New standalone profile for Claude Code extension development
+  - Standalone profile focused on creating commands, agents, and skills for Claude Code
+  - 10 standards files covering Claude Code development best practices
+  - Single implementer agent specialized as Claude Code specialist
+  - Standards organized into two categories:
+    - **claude-code/**: command-design.md, agent-design.md, skill-design.md, prompt-engineering.md
+    - **global/**: coding-style.md, conventions.md, frontmatter-conventions.md, tech-stack.md, documentation.md, validation.md
+  - **New comprehensive standards**:
+    - `skill-design.md`: Model-invoked capabilities, description best practices, conciseness principle, progressive disclosure, testing across models
+    - `frontmatter-conventions.md`: YAML metadata standards for commands, agents, skills with templates and validation patterns
+  - Based on Claude Code official documentation and real-world usage patterns from digest-ai project
+  - Covers recently released Skills support with proper activation triggers and discovery patterns
+
 - **Terraform-multicloud profile for v2.1.0**: Recreated standalone infrastructure profile
   - Standalone profile focused solely on infrastructure as code
   - 10 standards files covering Terraform, multi-cloud, testing, and CI/CD

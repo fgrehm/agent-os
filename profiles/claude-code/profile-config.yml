@@ -1,0 +1,6 @@
+# Claude Code Profile
+#
+# Specialized profile for developing Claude Code extensions: commands, agents, and skills.
+# Standalone profile focused on Claude Code platform development.
+
+inherits_from: false
