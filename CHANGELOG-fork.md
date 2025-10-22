@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- **Chezmoi profile for v2.1.0**: Recreated chezmoi profile with enhanced best practices
+  - Inherits from default profile, excludes backend/frontend standards
+  - 29 standards files covering chezmoi-specific development patterns
+  - Single implementer agent specialized for dotfiles and system configuration
+  - **Enhanced best practices**:
+    - `.chezmoiscripts/` directory guidance for cleaner home directory structure
+    - Docker-first testing strategy for safe development workflow
+    - Multi-environment support patterns (bare-metal, VM, container)
+    - Development safety rules to prevent accidental host system modification
+    - Comprehensive integration testing documentation
+  - All standards ported from active chezmakase project with refinements from real-world usage
+
+---
+
 ## [2.1.0-fork] - 2025-10-21
 
 ### Upgraded to Upstream v2.1.0

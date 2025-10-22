@@ -1,0 +1,30 @@
+## General development conventions for chezmoi projects
+
+- **Repository Structure**: Organize repository with clear separation (home/, configs/, scripts/, tests/)
+- **Chezmoi File Structure**: Follow chezmoi naming conventions (dot_, executable_, private_, readonly_ prefixes)
+- **Minimize Machine Differences**: Use templates to reduce actual configuration differences between machines
+- **Single Source of Truth**: Centralize configuration in version control; avoid manual file copying
+- **Clear Documentation**: Maintain up-to-date README.md and CLAUDE.md with setup instructions, architecture overview, and testing guidelines
+- **Version Control Best Practices**: Use conventional commit messages, meaningful commits, and clear commit descriptions
+- **Environment Configuration**: Use chezmoi templates for environment-specific configuration; never commit secrets or API keys
+- **Secret Management**: Use password manager integration (preferred) or age encryption for secrets
+- **Dependency Management**: Use .chezmoiexternal.toml for external dependencies (git repos, binaries, archives)
+- **Minimize Dependencies**: Keep external dependencies minimal; document why tools are required in CLAUDE.md
+- **Reproducible Environments**: Aim for complete system reproducibility from fresh install
+- **Testing Requirements**: Require BATS tests for critical scripts and templates before merging
+- **Feature Flags**: Use component flags in .chezmoi.toml.tmpl to enable/disable features
+- **Changelog Maintenance**: Keep a changelog or release notes to track significant changes
+- **Chezmoi Source Organization**: Organize files logically (home/, configs/, scripts/) for easy navigation
+- **Template Data Structure**: Keep complex data in .chezmoi.toml.tmpl for reuse across templates
+- **Shared Templates**: Use `.chezmoitemplates/` for reusable template snippets
+- **Script Organization**: Use chezmoi naming conventions for scripts:
+  - `run_once_*` for one-time setup scripts
+  - `run_onchange_*` for scripts that re-run on content changes
+  - `run_before_*` / `run_after_*` for execution timing
+  - Numeric prefixes for execution order
+- **One-Click Setup**: Provide a bootstrap script for complete environment setup
+- **Workflow Commands**:
+  - `chezmoi init` (first time) then `chezmoi apply`
+  - `chezmoi update` (single command for pull + apply)
+  - `chezmoi add <file>` to start tracking files
+- **Modular Configs**: Break large configuration files into modular pieces for maintainability

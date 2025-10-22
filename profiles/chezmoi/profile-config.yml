@@ -1,0 +1,10 @@
+# Chezmoi Profile
+#
+# Specialized profile for dotfiles management using chezmoi.
+# Inherits from default profile and excludes web app standards.
+
+inherits_from: default
+
+exclude_inherited_files:
+  - standards/backend/*
+  - standards/frontend/*

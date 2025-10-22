@@ -1,0 +1,41 @@
+## Integration testing standards
+
+### Docker-Based Integration Testing
+
+**Primary Testing Environment:**
+- **Docker Containers**: Use Docker as the primary integration testing environment
+- **Make Test Pattern**: Implement `make test` target that runs tests in Docker automatically
+- **Why Docker**: Provides clean, reproducible environment without risking host system
+- **Container Strategy**: Use official distribution images (Ubuntu, Fedora, etc.) as base
+- **Isolation Benefit**: Can test destructive operations safely (package installs, system modifications)
+
+**VM Testing:**
+- **When to use VMs**: Full end-to-end system validation with real boot process
+- **Vagrant**: Use Vagrant for automated VM-based testing when needed
+- **Use cases**: Testing boot scripts, systemd services, full system integration
+
+### Integration Test Standards
+
+- **Full Workflow Testing**: Test complete chezmoi init and apply workflows in isolated environments
+- **Environment Isolation**: Use VMs (Vagrant) or Docker containers to avoid affecting the host system
+- **Multiple Test Environments**:
+  - Docker containers for quick, lightweight testing (primary)
+  - VMs (Vagrant) for full end-to-end system testing
+  - Both environments should mirror production use cases
+- **Multiple Scenarios**: Test all setup types (basic, minimal, developer) in integration tests
+- **Cross-Platform**: Test on different Linux distributions (Ubuntu, Fedora, etc.)
+- **Container Testing**: Use devcontainer for consistent, reproducible test environments
+- **VM Testing**: Use Vagrant for full system-level integration testing
+- **CI Integration**: Ensure integration tests run in CI/CD pipeline
+- **Prerequisites Check**: Verify all required tools are available before running tests
+- **Idempotency Testing**: Verify that running `chezmoi apply` multiple times is safe
+- **Template Execution**: Test that templates execute correctly with different data inputs
+- **Script Execution**: Verify installation scripts run without errors in target environments
+- **File Validation**: Check that files are created with correct permissions and content
+- **Dry Run Testing**: Validate `chezmoi apply --dry-run` shows expected changes
+- **Performance**: Monitor test execution time; optimize slow tests
+- **Cleanup**: Always clean up test artifacts, containers, and temporary files
+- **Comprehensive Reporting**: Provide clear test output showing what passed, failed, and why
+- **Regular End-to-End Runs**: Periodically run complete setup from scratch to verify everything works
+- **Performance Tracking**: Monitor and benchmark installation time and resource usage
+- **Test-Driven Development**: Write tests before implementing new scripts or templates when appropriate
