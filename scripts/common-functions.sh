@@ -1301,10 +1301,11 @@ convert_filename_to_human_name() {
         local lowercase=$(echo "$acronym" | tr '[:upper:]' '[:lower:]')
         local capitalized=$(echo "$lowercase" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
 
-        # Replace all variations with the uppercase acronym using detected word boundaries
-        name=$(echo "$name" | sed -E "s/$WORD_OPEN$lowercase$WORD_CLOSE/$acronym/g")
-        name=$(echo "$name" | sed -E "s/$WORD_OPEN$capitalized$WORD_CLOSE/$acronym/g")
-        name=$(echo "$name" | sed -E "s/$WORD_OPEN$acronym$WORD_CLOSE/$acronym/g")
+        # Replace all variations with the uppercase acronym
+        # Use Perl for portable word boundary matching (\b works consistently across platforms)
+        name=$(echo "$name" | perl -pe "s/\\b$lowercase\\b/$acronym/g")
+        name=$(echo "$name" | perl -pe "s/\\b$capitalized\\b/$acronym/g")
+        name=$(echo "$name" | perl -pe "s/\\b$acronym\\b/$acronym/g")
     done
 
     echo "$name"
@@ -1347,10 +1348,11 @@ convert_filename_to_human_name_capitalized() {
         local lowercase=$(echo "$acronym" | tr '[:upper:]' '[:lower:]')
         local capitalized=$(echo "$lowercase" | awk '{print toupper(substr($0,1,1)) tolower(substr($0,2))}')
 
-        # Replace all variations with the uppercase acronym using detected word boundaries
-        name=$(echo "$name" | sed -E "s/$WORD_OPEN$lowercase$WORD_CLOSE/$acronym/g")
-        name=$(echo "$name" | sed -E "s/$WORD_OPEN$capitalized$WORD_CLOSE/$acronym/g")
-        name=$(echo "$name" | sed -E "s/$WORD_OPEN$acronym$WORD_CLOSE/$acronym/g")
+        # Replace all variations with the uppercase acronym
+        # Use Perl for portable word boundary matching (\b works consistently across platforms)
+        name=$(echo "$name" | perl -pe "s/\\b$lowercase\\b/$acronym/g")
+        name=$(echo "$name" | perl -pe "s/\\b$capitalized\\b/$acronym/g")
+        name=$(echo "$name" | perl -pe "s/\\b$acronym\\b/$acronym/g")
     done
     echo "$name"
 }
