@@ -498,9 +498,9 @@ Display to the user:
 
 💡 Tips:
 - Keep standards modular (one concern per file)
-- Use concrete examples over abstract principles
-- Start minimal, expand based on patterns you see frequently
-- Consider creating specialized workflow overrides in commands/
+- Keep standards lean: 20-50 lines of bullet points, no tutorials
+- Start minimal, expand based on patterns you correct frequently
+- Focus on reminders for Claude, not documentation for humans
 
 📚 Refer to Agent OS documentation and existing profiles for examples
 ```
