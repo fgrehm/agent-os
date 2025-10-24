@@ -6,6 +6,14 @@ description: Bootstrap a new Agent OS profile by analyzing project characteristi
 
 You are helping create a new Agent OS profile tailored to a specific project type or tech stack.
 
+## IMPORTANT: Profile Location
+
+**Profiles are created in the CURRENT DIRECTORY**, not in `~/agent-os/profiles/`.
+
+This command assumes you are running it from the Agent OS repository itself (or a fork). The profile will be created at `./profiles/[profile-name]/` relative to your current working directory.
+
+If the user is not in an Agent OS repository, ask them to `cd` to the appropriate location first.
+
 ## Process Overview
 
 This command will guide the user through:
@@ -22,7 +30,7 @@ Ask the user:
    - If they have a specific project directory, offer to analyze it
 
 2. **Should this profile inherit from an existing profile?**
-   - List available profiles in `~/agent-os/profiles/`
+   - List available profiles in `./profiles/` (current directory)
    - Explain: Inheritance allows overriding specific files while reusing most configuration
    - Default suggestion: Inherit from `default` unless it's fundamentally different
 
@@ -58,14 +66,13 @@ Summarize findings and suggest which standards folders to create/customize.
 
 ## PHASE 3: Create Profile Structure
 
-Create the profile directory structure directly:
+Create the profile directory structure directly in the current directory:
 
 ```bash
 profile_name="[name-from-phase-1]"
-base_dir="$HOME/agent-os"
 
-# Create directory structure
-mkdir -p "$base_dir/profiles/$profile_name"/{standards/{global,backend,frontend,testing},workflows/{implementation,planning,specification},agents,commands}
+# Create directory structure in current directory
+mkdir -p "profiles/$profile_name"/{standards/{global,backend,frontend,testing},workflows/{implementation,planning,specification},agents,commands}
 ```
 
 **Create `profile-config.yml`:**
@@ -91,7 +98,7 @@ inherits_from: [parent-profile or false]
 
 **Directory structure created:**
 ```
-~/agent-os/profiles/[profile-name]/
+./profiles/[profile-name]/
 ├── profile-config.yml
 ├── agents/
 │   └── implementer.md          # Generic implementer for this profile
@@ -170,7 +177,7 @@ Based on Phase 2 analysis, create focused standard files in the generated direct
 
 Example structure:
 ```
-~/agent-os/profiles/[profile-name]/standards/
+./profiles/[profile-name]/standards/
 ├── global/
 │   ├── naming-conventions.md
 │   ├── error-handling.md
@@ -210,7 +217,7 @@ If the profile needs custom workflow variations, create command overrides:
 **Example: Custom orchestrate-tasks for infrastructure projects:**
 
 ```bash
-mkdir -p "$base_dir/profiles/$profile_name/commands/orchestrate-tasks"
+mkdir -p "profiles/$profile_name/commands/orchestrate-tasks"
 ```
 
 Create customized command that references profile-specific workflows.
@@ -272,14 +279,14 @@ Display to the user:
 ```
 ✅ Profile '[name]' created successfully!
 
-📁 Location: ~/agent-os/profiles/[name]
+📁 Location: ./profiles/[name]
 
 📋 Structure Created:
   ✓ profile-config.yml (inheritance configured)
   ✓ claude-code-skill-template.md
   ✓ agents/implementer.md
   ✓ standards/ (ready for customization)
-  ✓ workflows/ (inherits from parent)
+  ✓ workflows/ (inherits from parent or standalone)
   ✓ commands/ (ready for overrides)
 
 📋 Next Steps:
