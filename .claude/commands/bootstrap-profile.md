@@ -37,8 +37,13 @@ Ask the user:
 3. **What makes this profile unique?**
    - What standards differ from the parent profile?
    - What specialized workflows are needed?
-   - Any custom commands to override?
    - Will this use Claude Code Skills for standards?
+
+4. **How should this profile handle Agent OS commands?**
+   - If inheriting from default: Commands come automatically (can override specific ones)
+   - If standalone: Copy commands from default, or skip them?
+   - The default profile provides: /plan-product, /shape-spec, /write-spec, /create-tasks, /implement-tasks, /orchestrate-tasks, /improve-skills
+   - Note: You can always add commands later
 
 ## PHASE 2: Project Analysis (Optional)
 
@@ -172,33 +177,107 @@ IMPORTANT: Ensure your implementation IS ALIGNED and DOES NOT CONFLICT with the 
 
 ## PHASE 5: Create Standards Files
 
-Based on Phase 2 analysis, create focused standard files in the generated directories:
+**CRITICAL: Keep standards LEAN (20-50 lines each, bullet points only)**
 
-Example structure:
+Standards are **reminders for Claude**, not documentation for humans. They get injected into agent context with `{{standards/*}}`, so verbosity = wasted tokens.
+
+### Format: Bullet Points Only
+
+Follow the default profile's style. Example from `profiles/default/standards/global/error-handling.md`:
+
+```markdown
+## Error handling best practices
+
+- **User-Friendly Messages**: Provide clear, actionable error messages to users
+- **Fail Fast and Explicitly**: Validate input and check preconditions early
+- **Specific Exception Types**: Use specific exception/error types rather than generic ones
+- **Centralized Error Handling**: Handle errors at appropriate boundaries
+- **Graceful Degradation**: Design systems to degrade gracefully when non-critical services fail
+- **Retry Strategies**: Implement exponential backoff for transient failures
+- **Clean Up Resources**: Always clean up resources in finally blocks
+```
+
+That's it! 10 lines, just principles. NO extensive examples, NO "When to Apply" sections, NO tutorials.
+
+### What to Include
+
+For each standard:
+- **Title**: Clear category (e.g., "README best practices for open source")
+- **Bullet points**: 8-15 items covering key principles
+- **Bold keywords**: Start each bullet with bold concept name
+- **Brief explanation**: One sentence after the colon
+- **NO sections**: No "When to Apply", "Examples", "Common Pitfalls" subheadings
+- **NO templates**: No full code examples (brief inline examples OK)
+- **Context-specific**: Focus on what makes this profile unique (e.g., OSS-specific concerns)
+
+### Standard File Structure
+
 ```
 ./profiles/[profile-name]/standards/
-├── global/
-│   ├── naming-conventions.md
-│   ├── error-handling.md
-│   └── tech-stack.md
-├── backend/
-│   ├── api-design.md
-│   ├── database-patterns.md
-│   └── auth-patterns.md
-└── testing/
-    ├── unit-tests.md
-    └── integration-tests.md
+├── global/              # Cross-cutting concerns
+│   ├── licensing.md     # ~15 lines
+│   ├── versioning.md    # ~15 lines
+│   └── tech-stack.md    # ~20 lines
+├── backend/             # Backend-specific (if applicable)
+│   ├── api-design.md    # ~15 lines
+│   └── database.md      # ~15 lines
+└── repository/          # Project health (for OSS)
+    ├── readme.md        # ~12 lines
+    └── contributing.md  # ~15 lines
 ```
 
-**For each standard:**
-1. Identify patterns from analysis
-2. Create focused files (keep under 300 lines each)
-3. Use concrete examples over vague guidance
-4. If using Skills: Write clear descriptions for discoverability
-5. Use the skill template structure for consistency
+### Creating Each Standard
 
-**Prompt user:**
-"For [CATEGORY], what are the key patterns/conventions this project follows? (e.g., for API design: RESTful conventions, versioning strategy, error response format)"
+1. **Start minimal**: 3-5 core standards, not 13
+2. **Identify principles**: What must Claude check/remember for this concern?
+3. **Write bullets**: Each bullet = one principle/reminder
+4. **Keep concise**: If over 25 lines, you're being too detailed
+5. **Reference default**: Look at `profiles/default/standards/` for style examples
+
+### Example: Good vs Bad
+
+**❌ Bad (tutorial style, 200+ lines):**
+```markdown
+# README Standards
+
+## When to Apply
+- Creating new projects
+- Updating documentation
+...
+
+## Complete Template
+
+```markdown
+# Project Name
+
+Detailed template with all sections...
+```
+
+## Detailed Examples
+...
+```
+
+**✅ Good (reminder style, 12 lines):**
+```markdown
+## README best practices for open source projects
+
+- **Clear Project Description**: Lead with one-sentence description
+- **Installation Instructions**: Provide clear, copy-paste commands
+- **Quick Start Example**: Show basic usage (< 5 minutes to success)
+- **License**: State clearly and link to LICENSE file
+- **Status Badges**: Include build status, version, license at top
+- **Documentation Links**: Point to full docs, API reference
+- **Welcoming Tone**: Write for newcomers evaluating the project
+```
+
+### Prompting the User
+
+For each category, ask:
+"What are the 5-10 most important principles for [CATEGORY] in this profile?"
+
+NOT: "Describe all the details of how to do [CATEGORY]"
+
+Focus on WHAT matters, not HOW to do it (Claude already knows how).
 
 ### Skills-Specific Guidance
 
@@ -244,17 +323,104 @@ For writing feature specifications:
 
 **Note:** Workflows are injected using `{{workflows/path/file}}` syntax in commands and agents. If your profile inherits from another, you get those workflows automatically unless excluded.
 
-## PHASE 6: Optional Custom Commands
+## PHASE 6: Commands Strategy
 
-If the profile needs custom workflow variations, create command overrides:
+Agent OS provides slash commands for the development workflow. Decide how to handle them for this profile.
 
-**Example: Custom orchestrate-tasks for infrastructure projects:**
+### Option 1: Inherit Commands (Recommended for Most Profiles)
+
+If your profile inherits from `default`, you automatically get these commands:
+- `/plan-product` - Create mission, roadmap, tech-stack
+- `/shape-spec` - Shape rough ideas into requirements
+- `/write-spec` - Write detailed specification
+- `/create-tasks` - Break spec into task list
+- `/implement-tasks` - Simple implementation workflow
+- `/orchestrate-tasks` - Advanced multi-agent orchestration
+- `/improve-skills` - Optimize Claude Code Skills
+
+**If inheriting:** You get these for free! Override only if you need customization.
+
+### Option 2: Copy Default Commands
+
+If your profile is standalone (`inherits_from: false`), you can copy commands:
 
 ```bash
-mkdir -p "profiles/$profile_name/commands/orchestrate-tasks"
+# Copy all commands from default profile
+cp -r profiles/default/commands/* "profiles/$profile_name/commands/"
+
+# Or copy selectively
+cp -r profiles/default/commands/implement-tasks "profiles/$profile_name/commands/"
+cp -r profiles/default/commands/improve-skills "profiles/$profile_name/commands/"
 ```
 
-Create customized command that references profile-specific workflows.
+**When to copy:**
+- Profile doesn't inherit from default
+- You want full Agent OS workflow commands
+- You'll customize them for your domain
+
+### Option 3: Custom Commands Only
+
+Create only profile-specific commands:
+
+```bash
+# Example: OSS-specific command
+mkdir -p "profiles/$profile_name/commands/create-oss-docs"
+```
+
+**When to go custom:**
+- Your profile serves a specialized workflow (e.g., pure OSS project management)
+- Default commands don't fit your domain
+- You want minimal command set
+
+### Option 4: Hybrid Approach
+
+Copy some, customize others:
+
+```bash
+# Copy standard commands
+cp -r profiles/default/commands/implement-tasks "profiles/$profile_name/commands/"
+
+# Create custom command
+mkdir -p "profiles/$profile_name/commands/setup-oss-repo"
+```
+
+### Commands to Consider
+
+**Essential for most profiles:**
+- `implement-tasks` - Basic implementation workflow
+- `improve-skills` - If using Skills mode
+
+**Useful for feature development:**
+- `write-spec` - Feature specification
+- `create-tasks` - Task breakdown
+
+**For product planning:**
+- `plan-product` - Strategic planning
+- `shape-spec` - Idea refinement
+
+**For complex projects:**
+- `orchestrate-tasks` - Multi-agent coordination
+
+### Prompting the User
+
+Ask the user:
+
+```
+Do you want to include Agent OS workflow commands in this profile?
+
+1. Inherit from default profile (get all commands automatically)
+2. Copy commands from default (if standalone profile)
+3. Skip commands for now (focus on standards only)
+
+Note: You can always add commands later by copying from profiles/default/commands/
+```
+
+If copying, show what's available:
+```bash
+ls -1 profiles/default/commands/
+```
+
+And confirm which to copy.
 
 ## PHASE 7: Documentation
 
