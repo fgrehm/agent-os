@@ -1,0 +1,8 @@
+inherits_from: false
+
+# Profile configuration for opensource-base
+# Generic base profile for open source projects, focusing on repository health,
+# community engagement, automation, and security best practices.
+#
+# This profile is tech-stack agnostic and can be used standalone or as a parent
+# for more specialized OSS profiles.
