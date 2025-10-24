@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - **Fix**: Replaced pipe with process substitution (`while read pattern; do ... done <<< "$excluded_patterns"`) to keep the while loop in the current shell scope, allowing the `excluded` variable to persist correctly.
   - **Impact**: Profiles with exclusions now correctly exclude those standards from Skills generation. For example, chezmoi profile now creates only 30 relevant skills (configuration, documentation, global, scripts, templates, testing) instead of 30+ backend/frontend skills that don't apply.
   - Matches upstream issue: https://github.com/buildermethods/agent-os/discussions/240
+  - Upstream PR: https://github.com/buildermethods/agent-os/pull/248
 
 - **CRITICAL: Dry-run mode deleting files in project-update.sh**: Fixed missing DRY_RUN checks in update cleanup phase
   - **Issue**: When running `project-update.sh` (or `project-install.sh` on an existing installation) with `--dry-run` flag, the script would ACTUALLY DELETE files during the cleanup phase, even though it claimed "DRY RUN - No files will be actually modified". Files were deleted but not recreated, resulting in data loss.
@@ -23,6 +24,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - **Fix**: Wrapped all 7 `rm -rf` commands (lines 778, 786, 794, 802, 810, 823, 834) with `if [[ "$DRY_RUN" != "true" ]]; then ... fi` checks. Also added dry-run messaging to show "Would prepare for update..." and "Dry run: Cleanup would be complete!" instead of the normal messages.
   - **Impact**: Dry-run mode now works correctly - no files are deleted or modified when using `--dry-run` flag. Users can safely preview updates without risking data loss.
   - **Verification**: `project-install.sh` already had proper DRY_RUN protection (line 512), so only `project-update.sh` needed the fix.
+  - Matches upstream issue: https://github.com/buildermethods/agent-os/discussions/244
+  - Upstream PR: https://github.com/buildermethods/agent-os/pull/245
 
 ### Added
 
