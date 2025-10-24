@@ -124,26 +124,25 @@ inherits_from: [parent-profile or false]
 
 ### 4.1 Create `claude-code-skill-template.md`
 
-Copy from default profile or create:
+Use the standard template format with placeholders:
 
 ```markdown
-# [Skill Title]
+---
+name: {{standard_name_humanized_capitalized}}
+description: Your approach to handling {{standard_name_humanized}}. Use this skill when working on files where {{standard_name_humanized}} comes into play.
+---
 
-Brief description of what this standard covers.
+# {{standard_name_humanized_capitalized}}
 
-## When to Apply
+This Skill provides Claude Code with specific guidance on how to adhere to [profile-specific context, e.g., "OSS best practices"] as they relate to {{standard_name_humanized}}.
 
-Describe when Claude should use this skill.
+## Instructions
 
-## Key Patterns
-
-[Concrete examples and patterns specific to your tech stack]
-
-## Related Standards
-
-- Related standard 1
-- Related standard 2
+For details, refer to the information provided in this file:
+[{{standard_name_humanized}}](../../../{{standard_file_path}})
 ```
+
+**Note:** The placeholders like `{{standard_name_humanized_capitalized}}` are replaced by the installation scripts when generating skills.
 
 ### 4.2 Create `agents/implementer.md`
 
@@ -209,6 +208,41 @@ If user wants to use Claude Code Skills (`standards_as_claude_code_skills: true`
 2. **Use specific keywords**: Include terms Claude should recognize (e.g., "Rails", "API", "database")
 3. **Plan to run `/improve-skills`**: After installation, this command optimizes skill descriptions
 4. **Focus on "when to apply"**: Help Claude understand context for using each skill
+
+## PHASE 5.5: Create Workflow Files
+
+Workflows provide reusable instruction blocks for common tasks. Consider creating workflows for:
+
+### Implementation Workflows (workflows/implementation/)
+
+Already created: `implement-tasks.md` from Phase 4.
+
+Consider adding profile-specific implementation patterns:
+- Code review checklists
+- Testing requirements
+- Documentation standards
+
+### Planning Workflows (workflows/planning/)
+
+For project planning and strategy:
+- `plan-project.md` - High-level project planning
+- `roadmap-planning.md` - Feature roadmap development
+- `architecture-decisions.md` - ADR (Architecture Decision Records) process
+
+**Example for OSS profile:**
+- `plan-oss-project.md` - Planning with community focus, sustainability strategy
+
+### Specification Workflows (workflows/specification/)
+
+For writing feature specifications:
+- `write-spec.md` - Detailed spec template
+- `rfc-process.md` - Request for Comments workflow
+- `api-design.md` - API specification standards
+
+**Example for OSS profile:**
+- `write-oss-spec.md` - Spec writing with RFC process, community review
+
+**Note:** Workflows are injected using `{{workflows/path/file}}` syntax in commands and agents. If your profile inherits from another, you get those workflows automatically unless excluded.
 
 ## PHASE 6: Optional Custom Commands
 
@@ -302,7 +336,7 @@ Display to the user:
 - Start minimal, expand based on patterns you see frequently
 - Consider creating specialized workflow overrides in commands/
 
-📚 Docs: https://buildermethods.com/agent-os/profiles
+📚 Refer to Agent OS documentation and existing profiles for examples
 ```
 
 ## Additional Notes
