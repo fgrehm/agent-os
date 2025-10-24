@@ -1,0 +1,8 @@
+inherits_from: opensource-base
+
+# Profile configuration for go-oss-cli
+# Specialized profile for building open source Go CLI tools and side projects.
+# Focuses on CLI best practices, cross-platform builds, distribution, and testing.
+#
+# Inherits OSS foundations (licensing, README, contributing, security) from opensource-base,
+# and adds Go-specific standards for CLI development.
