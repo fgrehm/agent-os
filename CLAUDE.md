@@ -132,6 +132,7 @@ agent-os/
 │   ├── default/          # Base profile for web apps
 │   ├── chezmoi/          # Dotfiles management with chezmoi
 │   ├── claude-code/      # Claude Code commands, agents, and skills development
+│   ├── opensource-base/  # Open source project management
 │   └── terraform-multicloud/  # Infrastructure as code (Terraform)
 ├── scripts/              # Installation and management scripts
 │   ├── base-install.sh   # Installs Agent OS to ~/agent-os
@@ -317,7 +318,19 @@ When implementing features, agents create:
 
 Standards should be:
 - **Modular**: One concern per file
-- **Specific**: Concrete rules, not vague advice
-- **Example-driven**: Show how to follow the standard
+- **Lean**: 20-50 lines of bullet points, not tutorials or extensive examples
+- **Reminder-focused**: Principles for Claude to remember, not human documentation
+- **Bullet-point format**: **Bold Concept**: Brief one-sentence explanation
+- **Token-efficient**: Standards get injected via {{standards/*}}, so verbosity = wasted tokens
 - **Minimal**: Start small, expand based on patterns you correct frequently
 - **Discoverable** (for Skills): Clear descriptions with relevant keywords
+
+**Example format** (from default profile):
+```markdown
+## Error handling best practices
+
+- **User-Friendly Messages**: Provide clear, actionable error messages to users
+- **Fail Fast and Explicitly**: Validate input and check preconditions early
+- **Specific Exception Types**: Use specific exception/error types rather than generic ones
+...
+```
